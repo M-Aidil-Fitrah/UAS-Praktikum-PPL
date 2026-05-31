@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Pet(models.Model):
     SPECIES_CHOICES = [
@@ -9,6 +10,7 @@ class Pet(models.Model):
 
     STATUS_CHOICES = [
         ('Available', 'Tersedia'),
+        ('Pending', 'Menunggu Persetujuan'),
         ('Adopted', 'Sudah Diadopsi'),
     ]
 
@@ -18,6 +20,7 @@ class Pet(models.Model):
     description = models.TextField(verbose_name="Deskripsi")
     photo = models.ImageField(upload_to='pets/', verbose_name="Foto Hewan", null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Available', verbose_name="Status Adopsi")
+    adopter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='adoptions', verbose_name="Pengadopsi")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

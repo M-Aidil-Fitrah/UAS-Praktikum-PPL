@@ -13,11 +13,11 @@
 
     <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
         <div class="bg-gray-900 p-8 text-center">
-            <h1 class="text-3xl font-extrabold text-orange-500 tracking-tight">AdoptMe<span class="text-white">Admin</span></h1>
-            <p class="text-gray-400 mt-2 text-sm">Masuk ke Dashboard Manajemen</p>
+            <h1 class="text-3xl font-extrabold text-orange-500 tracking-tight">AdoptMe<span class="text-white">.</span></h1>
+            <p class="text-gray-400 mt-2 text-sm">Masuk ke Akun Anda</p>
         </div>
         <div class="p-8">
-            <form method="post" action="{% url 'dashboard_login' %}" class="space-y-6">
+            <form method="post" action="{% url 'user_login' %}" class="space-y-6">
                 {% csrf_token %}
                 
                 {% if form.errors %}
@@ -38,7 +38,8 @@
                     Masuk
                 </button>
                 <div class="text-center mt-4">
-                    <a href="{% url 'home' %}" class="text-sm text-gray-500 hover:text-orange-500">Kembali ke Beranda Publik</a>
+                    <p class="text-sm text-gray-500">Belum punya akun? <a href="{% url 'user_register' %}" class="text-orange-500 hover:underline font-medium">Daftar sekarang</a></p>
+                    <a href="{% url 'home' %}" class="text-sm text-gray-400 hover:text-orange-500 block mt-3">Kembali ke Beranda Publik</a>
                 </div>
             </form>
         </div>

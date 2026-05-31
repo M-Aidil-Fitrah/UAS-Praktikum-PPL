@@ -24,7 +24,16 @@
                 </a>
                 <div class="flex items-center gap-4">
                     <a href="{% url 'home' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Beranda</a>
-                    <a href="{% url 'dashboard_login' %}" class="bg-gray-900 text-white px-5 py-2 rounded-full font-medium hover:bg-orange-500 transition shadow-md">Login Admin</a>
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'dashboard_index' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Dashboard</a>
+                        {% else %}
+                            <a href="{% url 'my_adoptions' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Adopsi Saya</a>
+                        {% endif %}
+                        <a href="{% url 'user_logout' %}" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-full font-medium hover:bg-gray-300 transition">Logout</a>
+                    {% else %}
+                        <a href="{% url 'user_login' %}" class="bg-gray-900 text-white px-5 py-2 rounded-full font-medium hover:bg-orange-500 transition shadow-md">Login</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -44,10 +44,37 @@
                 </div>
 
                 <div class="pt-8 border-t border-gray-100">
-                    <p class="text-sm text-gray-500 mb-4">Tertarik untuk mengadopsi {{ pet.name }}? Hubungi admin melalui kontak di bawah ini.</p>
-                    <a href="mailto:admin@adoptme.com?subject=Adopsi {{ pet.name }}" class="block w-full text-center bg-gray-900 text-white px-6 py-4 rounded-xl font-bold text-lg hover:bg-orange-500 transition shadow-lg hover:shadow-xl">
-                        Hubungi Admin
-                    </a>
+                    {% if pet.status == 'Available' %}
+                        {% if request.user.is_authenticated %}
+                            {% if not request.user.is_staff %}
+                                <form action="{% url 'adopt_pet' pet.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="block w-full text-center bg-orange-500 text-white px-6 py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg hover:shadow-xl">
+                                        Adopsi Sekarang
+                                    </button>
+                                </form>
+                            {% else %}
+                                <div class="bg-gray-100 text-gray-500 p-4 rounded-xl text-center text-sm font-medium">
+                                    Admin tidak bisa mengadopsi hewan.
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="bg-orange-50 p-4 rounded-xl text-center">
+                                <p class="text-sm text-gray-600 mb-3">Login terlebih dahulu untuk mengadopsi {{ pet.name }}.</p>
+                                <a href="{% url 'user_login' %}" class="inline-block w-full text-center bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition">
+                                    Login Sekarang
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% elif pet.status == 'Pending' %}
+                        <div class="bg-yellow-50 text-yellow-800 p-4 rounded-xl text-center font-bold">
+                            Menunggu Persetujuan Admin
+                        </div>
+                    {% else %}
+                        <div class="bg-gray-100 text-gray-500 p-4 rounded-xl text-center font-bold">
+                            Hewan ini sudah diadopsi.
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
