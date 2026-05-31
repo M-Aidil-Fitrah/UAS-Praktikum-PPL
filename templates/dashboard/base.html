@@ -40,7 +40,7 @@
             <div class="flex items-center">
                 <div class="ml-3">
                     <p class="text-sm font-medium text-white">{{ request.user.username }}</p>
-                    <a href="{% url 'dashboard_logout' %}" class="text-xs font-medium text-gray-400 hover:text-white">Sign out</a>
+                    <a href="{% url 'user_logout' %}" class="text-xs font-medium text-gray-400 hover:text-white">Sign out</a>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
     <main class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white shadow-sm h-16 flex items-center justify-between px-4 sm:px-6 md:hidden">
             <span class="text-xl font-extrabold text-orange-500 tracking-tight">AdoptMe<span class="text-gray-900">Admin</span></span>
-            <a href="{% url 'dashboard_logout' %}" class="text-sm font-medium text-gray-500 hover:text-gray-900">Sign out</a>
+            <a href="{% url 'user_logout' %}" class="text-sm font-medium text-gray-500 hover:text-gray-900">Sign out</a>
         </header>
         <div class="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
             {% block content %}{% endblock %}
