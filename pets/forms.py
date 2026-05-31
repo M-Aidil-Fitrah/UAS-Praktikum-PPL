@@ -1,0 +1,15 @@
+from django import forms
+from .models import Pet
+
+class PetForm(forms.ModelForm):
+    class Meta:
+        model = Pet
+        fields = ['name', 'species', 'age', 'description', 'photo', 'status']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
+            'species': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
+            'age': forms.NumberInput(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
+            'description': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 4}),
+            'photo': forms.FileInput(attrs={'class': 'w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer'}),
+            'status': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
+        }
