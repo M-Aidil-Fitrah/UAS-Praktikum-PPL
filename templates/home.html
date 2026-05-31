@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative bg-orange-50 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6">
+            Beri Mereka <span class="text-orange-500">Rumah</span>,<br>Beri Mereka <span class="text-orange-500">Cinta</span>
+        </h1>
+        <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-600 mx-auto mb-10">
+            Temukan hewan peliharaan menggemaskan yang menunggu untuk menjadi bagian dari keluarga Anda. Adopsi sekarang dan selamatkan kehidupan.
+        </p>
+        <a href="#pets" class="inline-block bg-orange-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-600 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            Lihat Hewan Tersedia
+        </a>
+    </div>
+    
+    <!-- Decorative blobs -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+    <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+</div>
+
+<!-- Pets Grid -->
+<div id="pets" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex justify-between items-end mb-10">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900">Sahabat Baru Anda</h2>
+            <p class="text-gray-500 mt-2">Pilih hewan peliharaan yang cocok dengan Anda.</p>
+        </div>
+    </div>
+
+    {% if pets %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {% for pet in pets %}
+        <a href="{% url 'pet_detail' pet.pk %}" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 overflow-hidden transition duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div class="relative w-full h-56 bg-gray-100 overflow-hidden">
+                {% if pet.photo %}
+                    <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-gray-400">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                {% endif %}
+                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-orange-600 shadow-sm">
+                    {{ pet.get_species_display }}
+                </div>
+            </div>
+            <div class="p-5 flex-grow flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1 group-hover:text-orange-500 transition">{{ pet.name }}</h3>
+                    <p class="text-gray-500 text-sm mb-3">{{ pet.age }} Bulan</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center text-orange-500 font-medium text-sm group-hover:translate-x-1 transition-transform">
+                    Lihat Profil <span class="ml-1">→</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">Belum Ada Hewan</h3>
+        <p class="mt-1 text-sm text-gray-500">Saat ini belum ada hewan peliharaan yang ditambahkan oleh Admin.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
