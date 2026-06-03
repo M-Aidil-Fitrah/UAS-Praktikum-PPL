@@ -54,20 +54,20 @@
                         {% endif %}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {% if pet.status == 'Pending' %}
-                            <div class="flex justify-end gap-2 mb-2">
+                        <div class="flex justify-end gap-2 items-center">
+                            {% if pet.status == 'Pending' %}
                                 <form action="{% url 'dashboard_approve_pet' pet.pk %}" method="post" class="inline">
                                     {% csrf_token %}
-                                    <button type="submit" class="text-green-600 hover:text-green-900 bg-green-50 px-2 py-1 rounded">Setujui</button>
+                                    <button type="submit" class="text-green-700 bg-green-100 hover:bg-green-200 px-3 py-1.5 rounded-lg font-bold transition shadow-sm" title="Setujui">✓ Setujui</button>
                                 </form>
                                 <form action="{% url 'dashboard_reject_pet' pet.pk %}" method="post" class="inline">
                                     {% csrf_token %}
-                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 px-2 py-1 rounded">Tolak</button>
+                                    <button type="submit" class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg font-bold transition shadow-sm" title="Tolak">✗ Tolak</button>
                                 </form>
-                            </div>
-                        {% endif %}
-                        <a href="{% url 'dashboard_pet_update' pet.pk %}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                        <a href="{% url 'dashboard_pet_delete' pet.pk %}" class="text-red-600 hover:text-red-900">Hapus</a>
+                            {% endif %}
+                            <a href="{% url 'dashboard_pet_update' pet.pk %}" class="text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg font-bold transition shadow-sm">Edit</a>
+                            <a href="{% url 'dashboard_pet_delete' pet.pk %}" class="text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg font-bold transition shadow-sm">Hapus</a>
+                        </div>
                     </td>
                 </tr>
                 {% empty %}
