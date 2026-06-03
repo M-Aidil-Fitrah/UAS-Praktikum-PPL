@@ -4,47 +4,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Akun - AdoptMe</title>
+    <title>Daftar Akun — AdoptMe</title>
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Outfit', sans-serif; }</style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 py-12">
+<body class="bg-gray-50 min-h-screen flex">
 
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-gray-900 p-8 text-center">
-            <h1 class="text-3xl font-extrabold text-orange-500 tracking-tight">AdoptMe<span class="text-white">.</span></h1>
-            <p class="text-gray-400 mt-2 text-sm">Bergabung dan Temukan Sahabat Baru</p>
-        </div>
-        <div class="p-8">
-            <form method="post" action="{% url 'user_register' %}" class="space-y-4">
-                {% csrf_token %}
-                
-                {% for field in form %}
-                <div class="flex flex-col">
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ field.label }}</label>
-                    <div class="relative">
-                        {{ field }}
-                    </div>
-                    {% if field.help_text %}
-                    <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
-                    {% endif %}
-                    {% if field.errors %}
-                    <p class="mt-1 text-sm text-red-600 font-medium">{{ field.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                {% endfor %}
-
-                <button type="submit" class="w-full bg-orange-500 text-white rounded-xl px-4 py-3 mt-6 font-bold hover:bg-orange-600 transition duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                    Daftar Sekarang
-                </button>
-                <div class="text-center mt-4 pt-4 border-t border-gray-100">
-                    <p class="text-sm text-gray-500">Sudah punya akun? <a href="{% url 'user_login' %}" class="text-orange-500 hover:underline font-medium">Masuk di sini</a></p>
-                    <a href="{% url 'home' %}" class="text-sm text-gray-400 hover:text-orange-500 block mt-3">Kembali ke Beranda Publik</a>
-                </div>
-            </form>
+    <!-- Left panel -->
+    <div class="hidden lg:flex lg:w-1/2 bg-cover bg-center relative flex-col justify-between p-12 overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=1000');">
+        <div class="absolute inset-0 bg-black/40 z-0"></div>
+        <a href="{% url 'home' %}" class="text-lg font-semibold text-white relative z-10">AdoptMe</a>
+        <div class="relative z-10">
+            <blockquote class="text-gray-100 text-lg font-light leading-relaxed mb-6">
+                "Setiap adopsi adalah awal dari persahabatan seumur hidup."
+            </blockquote>
+            <p class="text-gray-300 text-sm">Bergabung dan mulai perjalanan adopsi Anda.</p>
         </div>
     </div>
+
+    <!-- Right panel -->
+    <div class="flex-1 flex items-center justify-center p-8 overflow-y-auto">
+        <div class="w-full max-w-md py-4">
+            <div class="mb-6">
+                <a href="{% url 'home' %}" class="text-lg font-semibold text-gray-900 lg:hidden block mb-6">AdoptMe</a>
+                <h1 class="text-2xl font-semibold text-gray-900 mb-1">Buat akun baru</h1>
+                <p class="text-sm text-gray-400">Isi data diri Anda untuk mulai mengadopsi.</p>
+            </div>
+
+            <form method="post" action="{% url 'user_register' %}" class="space-y-4" id="register-form">
+                {% csrf_token %}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for field in form %}
+                    <div class="{% if field.name == 'username' or field.name == 'email' %}md:col-span-2{% endif %}">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ field.label }}</label>
+                        <div class="relative">
+                            {{ field }}
+                            {% if 'password' in field.name %}
+                            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none toggle-password" data-target="{{ field.id_for_label }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+                            {% endif %}
+                        </div>
+                        
+                        {% if field.name == 'password1' %}
+                        <div class="mt-2 text-xs space-y-1" id="password-requirements">
+                            <p class="flex items-center gap-1.5 text-gray-400 transition-colors req-text" data-req="length"><svg class="w-3.5 h-3.5 text-gray-300 transition-colors req-icon" data-req="length" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Minimal 8 karakter</p>
+                            <p class="flex items-center gap-1.5 text-gray-400 transition-colors req-text" data-req="number"><svg class="w-3.5 h-3.5 text-gray-300 transition-colors req-icon" data-req="number" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Mengandung angka</p>
+                        </div>
+                        {% endif %}
+
+                        {% if field.errors %}
+                        <p class="mt-1 text-xs text-red-500">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="w-full bg-gray-900 text-white py-2.5 text-sm font-medium rounded-md hover:bg-gray-700 transition mt-2">
+                    Buat Akun
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-gray-100 text-center">
+                <p class="text-sm text-gray-500">Sudah punya akun? <a href="{% url 'user_login' %}" class="text-gray-900 font-medium hover:underline">Masuk di sini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle Password Visibility
+            const toggleButtons = document.querySelectorAll('.toggle-password');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.innerHTML = '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>';
+                    } else {
+                        input.type = 'password';
+                        this.innerHTML = '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>';
+                    }
+                });
+            });
+
+            // Password Requirements Check
+            const passwordInput = document.querySelector('input[name="password1"]');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    const val = this.value;
+                    const reqLength = document.querySelector('.req-icon[data-req="length"]');
+                    const textLength = document.querySelector('.req-text[data-req="length"]');
+                    const reqNumber = document.querySelector('.req-icon[data-req="number"]');
+                    const textNumber = document.querySelector('.req-text[data-req="number"]');
+
+                    if (val.length >= 8) {
+                        reqLength.classList.replace('text-gray-300', 'text-green-500');
+                        textLength.classList.replace('text-gray-400', 'text-green-600');
+                        textLength.classList.add('font-medium');
+                    } else {
+                        reqLength.classList.replace('text-green-500', 'text-gray-300');
+                        textLength.classList.replace('text-green-600', 'text-gray-400');
+                        textLength.classList.remove('font-medium');
+                    }
+
+                    if (/\d/.test(val)) {
+                        reqNumber.classList.replace('text-gray-300', 'text-green-500');
+                        textNumber.classList.replace('text-gray-400', 'text-green-600');
+                        textNumber.classList.add('font-medium');
+                    } else {
+                        reqNumber.classList.replace('text-green-500', 'text-gray-300');
+                        textNumber.classList.replace('text-green-600', 'text-gray-400');
+                        textNumber.classList.remove('font-medium');
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

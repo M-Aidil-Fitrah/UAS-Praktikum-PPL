@@ -1,144 +1,119 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}AdoptMe — Temukan Sahabat Baru{% endblock %}
+
 {% block content %}
+
 <!-- Hero Section -->
-<div class="relative bg-orange-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6">
-            Beri Mereka <span class="text-orange-500">Rumah</span>,<br>Beri Mereka <span class="text-orange-500">Cinta</span>
-        </h1>
-        <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-600 mx-auto mb-10">
-            Temukan hewan peliharaan menggemaskan yang menunggu untuk menjadi bagian dari keluarga Anda. Adopsi sekarang dan selamatkan kehidupan.
-        </p>
-        <a href="#pets" class="inline-block bg-orange-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-600 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-            Lihat Hewan Tersedia
-        </a>
+<section class="border-b border-gray-100 py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="max-w-2xl">
+            <p class="text-sm font-medium text-gray-400 tracking-widest uppercase mb-5">Platform Adopsi Hewan</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-5">
+                Setiap hewan berhak<br>mendapat rumah yang baik.
+            </h1>
+            <p class="text-gray-500 text-base leading-relaxed mb-8 max-w-lg">
+                Temukan hewan peliharaan yang menunggu untuk menjadi bagian dari keluarga Anda. Proses adopsi yang mudah dan transparan.
+            </p>
+            <a href="#pets" class="inline-block text-sm font-medium bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">Lihat Hewan Tersedia</a>
+        </div>
     </div>
-    
-    <!-- Decorative blobs -->
-    <div class="absolute top-0 left-0 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
-    <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
-</div>
+</section>
 
 <!-- Pets Grid -->
-<div id="pets" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
-        <div>
-            <h2 class="text-3xl font-bold text-gray-900">Sahabat Baru Anda</h2>
-            <p class="text-gray-500 mt-2">Pilih hewan peliharaan yang cocok dengan Anda.</p>
-        </div>
-        
-        <!-- Search and Filter Form -->
-        <form method="get" action="{% url 'home' %}#pets" class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-            <div class="relative flex-grow sm:min-w-[250px]">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <input type="text" name="q" value="{{ search_query }}" placeholder="Cari nama hewan..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white shadow-sm text-sm">
-            </div>
-            <select name="species" class="w-full sm:w-auto py-3 px-4 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white shadow-sm text-sm text-gray-700 font-medium appearance-none" onchange="this.form.submit()">
-                <option value="">Semua Jenis</option>
-                {% for value, label in species_choices %}
-                    <option value="{{ value }}" {% if species_query == value %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="hidden sm:block bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-500 transition shadow-md">
-                Filter
-            </button>
-            <button type="submit" class="sm:hidden w-full bg-orange-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-600 transition shadow-md mt-2">
-                Cari & Filter
-            </button>
-        </form>
-    </div>
+<section id="pets" class="py-14">
+    <div class="max-w-6xl mx-auto px-6">
 
-    {% if pets %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {% for pet in pets %}
-        <a href="{% url 'pet_detail' pet.pk %}" class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 transform hover:-translate-y-2 flex flex-col animate-fade-in-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
-            <div class="relative w-full h-56 bg-gray-100 overflow-hidden">
-                {% if pet.photo %}
-                    <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                {% else %}
-                    <div class="w-full h-full flex items-center justify-center text-gray-400">
-                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    </div>
+        <!-- Header + Filter -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-5">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-900">Hewan Tersedia</h2>
+                {% if search_query or species_query %}
+                <p class="text-sm text-gray-400 mt-1">
+                    Menampilkan hasil untuk
+                    {% if search_query %}"{{ search_query }}"{% endif %}
+                    {% if species_query %}kategori {{ species_query }}{% endif %}.
+                    <a href="{% url 'home' %}#pets" class="underline hover:text-gray-700">Reset</a>
+                </p>
                 {% endif %}
-                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-orange-600 shadow-sm">
-                    {{ pet.get_species_display }}
-                </div>
             </div>
-            <div class="p-5 flex-grow flex flex-col justify-between relative">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-1 group-hover:text-orange-500 transition">{{ pet.name }}</h3>
-                    <p class="text-gray-500 text-sm mb-3 font-medium">{{ pet.age }} Bulan</p>
-                </div>
-                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-orange-500 font-bold text-sm group-hover:translate-x-1 transition-transform duration-300">
-                    <span>Lihat Profil</span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
 
-    <!-- Pagination -->
-    {% if page_obj.has_other_pages %}
-    <div class="mt-12 flex justify-center">
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <form method="get" action="{% url 'home' %}#pets" class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                <div class="relative flex-grow sm:w-56">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" name="q" value="{{ search_query }}" placeholder="Cari nama hewan..." class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 bg-white">
+                </div>
+                <select name="species" onchange="this.form.submit()" class="text-sm py-2 px-3 border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 bg-white text-gray-700">
+                    <option value="">Semua Jenis</option>
+                    {% for value, label in species_choices %}
+                        <option value="{{ value }}" {% if species_query == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition">Cari</button>
+            </form>
+        </div>
+
+        {% if pets %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {% for pet in pets %}
+            <a href="{% url 'pet_detail' pet.pk %}" class="group border border-gray-100 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-md transition-all duration-200 flex flex-col bg-white">
+                <div class="w-full h-52 bg-gray-50 overflow-hidden">
+                    {% if pet.photo %}
+                        <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-gray-300">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <div class="flex items-start justify-between gap-2 mb-1">
+                        <h3 class="font-semibold text-gray-900 text-base">{{ pet.name }}</h3>
+                        <span class="text-xs text-gray-400 border border-gray-200 px-2 py-0.5 rounded shrink-0">{{ pet.get_species_display }}</span>
+                    </div>
+                    <p class="text-sm text-gray-400">{{ pet.age }} bulan</p>
+                    <div class="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between">
+                        <span class="text-xs font-medium text-gray-900 group-hover:underline">Lihat profil</span>
+                        <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="mt-12 flex items-center justify-center gap-1">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if species_query %}&species={{ species_query }}{% endif %}" class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <span class="sr-only">Previous</span>
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if species_query %}&species={{ species_query }}{% endif %}" class="inline-flex items-center px-3 py-2 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
-            {% else %}
-                <span class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-400 cursor-not-allowed">
-                    <span class="sr-only">Previous</span>
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </span>
             {% endif %}
-
             {% for i in page_obj.paginator.page_range %}
                 {% if page_obj.number == i %}
-                    <span aria-current="page" class="z-10 bg-orange-50 border-orange-500 text-orange-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                        {{ i }}
-                    </span>
+                    <span class="inline-flex items-center px-3.5 py-2 border border-gray-900 bg-gray-900 rounded-md text-sm text-white font-medium">{{ i }}</span>
                 {% else %}
-                    <a href="?page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}{% if species_query %}&species={{ species_query }}{% endif %}" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                        {{ i }}
-                    </a>
+                    <a href="?page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}{% if species_query %}&species={{ species_query }}{% endif %}" class="inline-flex items-center px-3.5 py-2 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">{{ i }}</a>
                 {% endif %}
             {% endfor %}
-
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if species_query %}&species={{ species_query }}{% endif %}" class="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <span class="sr-only">Next</span>
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if species_query %}&species={{ species_query }}{% endif %}" class="inline-flex items-center px-3 py-2 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
-            {% else %}
-                <span class="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-400 cursor-not-allowed">
-                    <span class="sr-only">Next</span>
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </span>
             {% endif %}
-        </nav>
-    </div>
-    {% endif %}
+        </div>
+        {% endif %}
 
-    {% else %}
-    <div class="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-        </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">Belum Ada Hewan</h3>
-        <p class="mt-1 text-sm text-gray-500">
+        {% else %}
+        <div class="py-24 text-center border border-dashed border-gray-200 rounded-xl">
+            <p class="text-sm font-medium text-gray-400">Tidak ada hewan ditemukan.</p>
             {% if search_query or species_query %}
-                Tidak ada hewan yang cocok dengan kriteria pencarian Anda. <a href="{% url 'home' %}#pets" class="text-orange-500 hover:underline">Hapus Filter</a>.
-            {% else %}
-                Saat ini belum ada hewan peliharaan yang ditambahkan oleh Admin.
+            <a href="{% url 'home' %}#pets" class="mt-3 inline-block text-sm text-gray-700 underline">Hapus filter</a>
             {% endif %}
-        </p>
+        </div>
+        {% endif %}
+
     </div>
-    {% endif %}
-</div>
+</section>
 {% endblock %}

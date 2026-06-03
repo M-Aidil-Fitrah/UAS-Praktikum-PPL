@@ -4,46 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - AdoptMe</title>
+    <title>Masuk — AdoptMe</title>
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Outfit', sans-serif; }</style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-50 min-h-screen flex">
 
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-gray-900 p-8 text-center">
-            <h1 class="text-3xl font-extrabold text-orange-500 tracking-tight">AdoptMe<span class="text-white">.</span></h1>
-            <p class="text-gray-400 mt-2 text-sm">Masuk ke Akun Anda</p>
-        </div>
-        <div class="p-8">
-            <form method="post" action="{% url 'user_login' %}" class="space-y-6">
-                {% csrf_token %}
-                
-                {% if form.errors %}
-                <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium">
-                    Username atau password salah.
-                </div>
-                {% endif %}
-
-                <div class="relative">
-                    <input type="text" id="username" name="username" class="block px-4 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-orange-500 peer" placeholder=" " required>
-                    <label for="username" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-focus:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Username</label>
-                </div>
-                <div class="relative">
-                    <input type="password" id="password" name="password" class="block px-4 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-orange-500 peer" placeholder=" " required>
-                    <label for="password" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-focus:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Password</label>
-                </div>
-                <button type="submit" class="w-full bg-orange-500 text-white rounded-xl px-4 py-3 font-bold hover:bg-orange-600 transition duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                    Masuk
-                </button>
-                <div class="text-center mt-4">
-                    <p class="text-sm text-gray-500">Belum punya akun? <a href="{% url 'user_register' %}" class="text-orange-500 hover:underline font-medium">Daftar sekarang</a></p>
-                    <a href="{% url 'home' %}" class="text-sm text-gray-400 hover:text-orange-500 block mt-3">Kembali ke Beranda Publik</a>
-                </div>
-            </form>
+    <!-- Left panel -->
+    <div class="hidden lg:flex lg:w-1/2 bg-cover bg-center relative flex-col justify-between p-12 overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&q=80&w=1000');">
+        <div class="absolute inset-0 bg-black/40 z-0"></div>
+        <a href="{% url 'home' %}" class="text-lg font-semibold text-white relative z-10">AdoptMe</a>
+        <div class="relative z-10">
+            <blockquote class="text-gray-100 text-lg font-light leading-relaxed mb-6">
+                "Mengadopsi satu hewan tidak akan mengubah dunia, tapi dunia akan berubah bagi hewan itu."
+            </blockquote>
+            <p class="text-gray-300 text-sm">Platform Adopsi Hewan</p>
         </div>
     </div>
+
+    <!-- Right panel -->
+    <div class="flex-1 flex items-center justify-center p-8">
+        <div class="w-full max-w-sm">
+            <div class="mb-8">
+                <a href="{% url 'home' %}" class="text-lg font-semibold text-gray-900 lg:hidden block mb-8">AdoptMe</a>
+                <h1 class="text-2xl font-semibold text-gray-900 mb-1">Selamat datang kembali</h1>
+                <p class="text-sm text-gray-400">Masuk untuk melanjutkan ke akun Anda.</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="mb-6 px-4 py-3 border border-red-200 bg-red-50 rounded-md text-sm text-red-600">
+                Username atau password tidak sesuai.
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'user_login' %}" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
+                    <input type="text" id="username" name="username" required
+                        class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-md bg-white focus:outline-none focus:border-gray-400 transition placeholder-gray-400"
+                        placeholder="Masukkan username">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required
+                            class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-md bg-white focus:outline-none focus:border-gray-400 transition placeholder-gray-400 pr-10"
+                            placeholder="Masukkan password">
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none toggle-password" data-target="password">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-gray-900 text-white py-2.5 text-sm font-medium rounded-md hover:bg-gray-700 transition mt-2">
+                    Masuk
+                </button>
+            </form>
+
+            <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+                <p class="text-sm text-gray-500">Belum punya akun? <a href="{% url 'user_register' %}" class="text-gray-900 font-medium hover:underline">Daftar sekarang</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle Password Visibility
+            const toggleButtons = document.querySelectorAll('.toggle-password');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.innerHTML = '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>';
+                    } else {
+                        input.type = 'password';
+                        this.innerHTML = '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>';
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>

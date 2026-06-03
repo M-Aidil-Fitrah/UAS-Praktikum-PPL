@@ -3,18 +3,26 @@
 {% block title %}Hapus Hewan{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-10">
-    <div class="bg-white shadow-xl rounded-2xl border border-red-100 overflow-hidden text-center p-8">
-        <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+<div class="max-w-md">
+    <a href="{% url 'dashboard_index' %}" class="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition mb-8">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Kembali
+    </a>
+
+    <div class="bg-white border border-gray-100 rounded-xl p-8">
+        <div class="w-12 h-12 border border-red-100 bg-red-50 rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">Hapus Data Hewan?</h2>
-        <p class="text-gray-500 mb-8">Apakah Anda yakin ingin menghapus <strong>{{ pet.name }}</strong> dari daftar? Tindakan ini tidak dapat dibatalkan.</p>
-        
-        <form method="post" class="flex gap-3 justify-center">
+
+        <h1 class="text-lg font-semibold text-gray-900 mb-2">Hapus data hewan?</h1>
+        <p class="text-sm text-gray-500 mb-8">
+            Anda akan menghapus data <strong class="font-medium text-gray-900">{{ pet.name }}</strong>. Tindakan ini tidak dapat dibatalkan.
+        </p>
+
+        <form method="post" class="flex items-center gap-3">
             {% csrf_token %}
-            <a href="{% url 'dashboard_index' %}" class="px-6 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition">Batal</a>
-            <button type="submit" class="px-6 py-2.5 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/30">Ya, Hapus</button>
+            <a href="{% url 'dashboard_index' %}" class="text-sm text-gray-500 border border-gray-200 px-4 py-2 rounded-md hover:bg-gray-50 transition">Batal</a>
+            <button type="submit" class="text-sm font-medium bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">Ya, Hapus</button>
         </form>
     </div>
 </div>

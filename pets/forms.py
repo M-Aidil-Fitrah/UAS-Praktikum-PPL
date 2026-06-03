@@ -1,31 +1,42 @@
 from django import forms
 from .models import Pet
 
+BASE_INPUT = 'w-full px-3 py-2.5 text-sm border border-gray-200 rounded-md bg-white focus:outline-none focus:border-gray-400 transition placeholder-gray-400'
+BASE_FILE  = 'w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer'
+
 class PetForm(forms.ModelForm):
     class Meta:
         model = Pet
         fields = ['name', 'species', 'age', 'description', 'photo', 'status']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
-            'species': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
-            'age': forms.NumberInput(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
-            'description': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 4}),
-            'photo': forms.FileInput(attrs={'class': 'w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer'}),
-            'status': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'}),
+            'name':        forms.TextInput(attrs={'class': BASE_INPUT, 'placeholder': 'Nama hewan'}),
+            'species':     forms.Select(attrs={'class': BASE_INPUT}),
+            'age':         forms.NumberInput(attrs={'class': BASE_INPUT, 'placeholder': 'Umur dalam bulan'}),
+            'description': forms.Textarea(attrs={'class': BASE_INPUT, 'rows': 4, 'placeholder': 'Deskripsi singkat tentang hewan ini'}),
+            'photo':       forms.FileInput(attrs={'class': BASE_FILE}),
+            'status':      forms.Select(attrs={'class': BASE_INPUT}),
         }
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class RegisterForm(UserCreationForm):
+    username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': BASE_INPUT, 'placeholder': 'Username (Maks 30 karakter)'}))
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': BASE_INPUT, 'placeholder': 'Nama Depan'}))
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': BASE_INPUT, 'placeholder': 'Nama Belakang'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': BASE_INPUT, 'placeholder': 'Alamat Email'}))
+
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'})
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({'class': BASE_INPUT})
+            field.help_text = ''  # Clear default help texts to save space
+            if 'password' in field_name:
+                field.widget.attrs.update({'placeholder': 'Masukkan password'})
 
 from .models import AdoptionRequest
 
@@ -34,8 +45,8 @@ class AdoptionRequestForm(forms.ModelForm):
         model = AdoptionRequest
         fields = ['reason', 'experience']
         widgets = {
-            'reason': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 4, 'placeholder': 'Ceritakan alasan Anda ingin mengadopsi hewan ini...'}),
-            'experience': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 3, 'placeholder': 'Apakah Anda pernah memelihara hewan sebelumnya? Jika ya, ceritakan sedikit.'}),
+            'reason':     forms.Textarea(attrs={'class': BASE_INPUT, 'rows': 4, 'placeholder': 'Ceritakan alasan Anda ingin mengadopsi hewan ini...'}),
+            'experience': forms.Textarea(attrs={'class': BASE_INPUT, 'rows': 3, 'placeholder': 'Apakah Anda pernah memelihara hewan sebelumnya?'}),
         }
 
 from .models import UserProfile
@@ -45,9 +56,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['phone_number', 'address', 'avatar']
         widgets = {
-            'phone_number': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'placeholder': 'Contoh: 081234567890'}),
-            'address': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 3, 'placeholder': 'Alamat lengkap tempat tinggal Anda'}),
-            'avatar': forms.FileInput(attrs={'class': 'w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer'}),
+            'phone_number': forms.TextInput(attrs={'class': BASE_INPUT, 'placeholder': 'Contoh: 081234567890'}),
+            'address':      forms.Textarea(attrs={'class': BASE_INPUT, 'rows': 3, 'placeholder': 'Alamat lengkap tempat tinggal Anda'}),
+            'avatar':       forms.FileInput(attrs={'class': BASE_FILE}),
         }
-
-

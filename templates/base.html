@@ -4,36 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AdoptMe - Temukan Teman Baru{% endblock %}</title>
-    <!-- Tailwind CSS (compiled via package.json script) -->
+    <title>{% block title %}AdoptMe{% endblock %}</title>
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: color 0.15s ease; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen">
+<body class="bg-white text-gray-900 antialiased flex flex-col min-h-screen">
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="{% url 'home' %}" class="flex items-center gap-2">
-                    <span class="text-2xl font-extrabold text-orange-500 tracking-tight">AdoptMe<span class="text-gray-900">.</span></span>
-                </a>
-                <div class="flex items-center gap-4">
-                    <a href="{% url 'home' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Beranda</a>
+    <nav class="border-b border-gray-100 sticky top-0 z-50 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between h-14 items-center">
+                <a href="{% url 'home' %}" class="text-lg font-semibold tracking-tight text-gray-900">AdoptMe</a>
+                <div class="flex items-center gap-6">
+                    <a href="{% url 'home' %}" class="nav-link text-sm text-gray-500 hover:text-gray-900">Beranda</a>
                     {% if request.user.is_authenticated %}
                         {% if request.user.is_staff %}
-                            <a href="{% url 'dashboard_index' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Dashboard</a>
+                            <a href="{% url 'dashboard_index' %}" class="nav-link text-sm text-gray-500 hover:text-gray-900">Dashboard</a>
                         {% else %}
-                            <a href="{% url 'my_adoptions' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Adopsi Saya</a>
+                            <a href="{% url 'my_adoptions' %}" class="nav-link text-sm text-gray-500 hover:text-gray-900">Adopsi Saya</a>
                         {% endif %}
-                        <a href="{% url 'user_profile' %}" class="text-gray-600 hover:text-orange-500 font-medium transition">Profil</a>
-                        <a href="{% url 'user_logout' %}" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-full font-medium hover:bg-gray-300 transition">Logout</a>
+                        <a href="{% url 'user_profile' %}" class="nav-link text-sm text-gray-500 hover:text-gray-900">Profil</a>
+                        <a href="{% url 'user_logout' %}" class="text-sm text-gray-900 border border-gray-200 px-4 py-1.5 rounded-md hover:bg-gray-50 transition">Keluar</a>
                     {% else %}
-                        <a href="{% url 'user_login' %}" class="bg-gray-900 text-white px-5 py-2 rounded-full font-medium hover:bg-orange-500 transition shadow-md">Login</a>
+                        <a href="{% url 'user_login' %}" class="text-sm bg-gray-900 text-white px-4 py-1.5 rounded-md hover:bg-gray-700 transition">Masuk</a>
                     {% endif %}
                 </div>
             </div>
@@ -42,13 +39,12 @@
 
     <!-- Toast Notifications -->
     {% if messages %}
-    <div id="toast-container" class="fixed top-20 right-4 z-[60] flex flex-col gap-2">
+    <div id="toast-container" class="fixed top-16 right-5 z-[60] flex flex-col gap-2">
         {% for message in messages %}
-        <div class="toast-message flex items-center p-4 w-full max-w-xs text-gray-600 bg-white rounded-xl shadow-lg border-l-4 {% if message.tags == 'success' %}border-green-500{% elif message.tags == 'error' %}border-red-500{% else %}border-blue-500{% endif %} transform transition-all duration-500 translate-x-full opacity-0" role="alert">
-            <div class="ml-3 text-sm font-medium">{{ message }}</div>
-            <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8" onclick="this.parentElement.remove();" aria-label="Close">
-                <span class="sr-only">Close</span>
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+        <div class="toast-message flex items-center justify-between gap-4 px-4 py-3 w-80 bg-white rounded-lg border border-gray-200 shadow-md text-sm text-gray-700 transform transition-all duration-300 translate-y-2 opacity-0" role="alert">
+            <span>{{ message }}</span>
+            <button onclick="this.parentElement.remove();" class="text-gray-400 hover:text-gray-700 shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
         {% endfor %}
@@ -57,16 +53,13 @@
         document.addEventListener("DOMContentLoaded", function() {
             const toasts = document.querySelectorAll('.toast-message');
             toasts.forEach((toast, index) => {
-                // Show toast
                 setTimeout(() => {
-                    toast.classList.remove('translate-x-full', 'opacity-0');
-                }, 100 + (index * 150));
-                
-                // Hide toast after 5s
+                    toast.classList.remove('translate-y-2', 'opacity-0');
+                }, 100 + (index * 100));
                 setTimeout(() => {
-                    toast.classList.add('translate-x-full', 'opacity-0');
-                    setTimeout(() => toast.remove(), 500);
-                }, 5000 + (index * 150));
+                    toast.classList.add('translate-y-2', 'opacity-0');
+                    setTimeout(() => toast.remove(), 300);
+                }, 5000 + (index * 100));
             });
         });
     </script>
@@ -78,9 +71,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-12 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm font-medium">© 2026 AdoptMe. All Rights Reserved.</p>
+    <footer class="border-t border-gray-100 py-8 mt-16">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <span class="text-sm font-semibold text-gray-900">AdoptMe</span>
+            <span class="text-sm text-gray-400">2026. Semua hak dilindungi.</span>
         </div>
     </footer>
 
