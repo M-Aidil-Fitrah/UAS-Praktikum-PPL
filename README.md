@@ -13,7 +13,15 @@ AdoptMe adalah aplikasi web berbasis Django yang dirancang untuk mempertemukan h
 - **Sistem Pengajuan Adopsi:** Pengguna yang sudah login dapat mengisi formulir pengajuan adopsi terperinci (alasan & pengalaman).
 - **Profil Pengguna:** Halaman profil bagi pengguna untuk memperbarui informasi kontak (Nomor Telepon, Alamat, Foto Profil).
 - **Riwayat Adopsi:** Pengguna dapat melacak status pengajuan hewan adopsinya sendiri.
+- **Validasi Keamanan Password:** Indikator kekuatan password (minimal 8 karakter & angka) secara *real-time* disertai toggle buka/tutup kata sandi.
 - **Pagination & UI Dinamis:** Menampilkan data secara modular (8-10 per halaman) dengan desain antarmuka berbasis Tailwind CSS yang responsif dan modern.
+
+### 🎨 Estetika & Interaktivitas Premium (GSAP)
+- **Minimalist Stage Preloader:** Transisi layar pembuka berupa tirai penutup gelap yang terangkat ke atas secara sinematik saat pertama kali membuka halaman utama.
+- **Agency-Style Text Reveal:** Judul utama halaman landing terkuak (*reveal*) mulus dari bawah baris teks.
+- **Magnetic CTA Button:** Tombol aksi utama secara interaktif mendekat dan menempel halus mengikuti gerakan kursor mouse pengguna.
+- **3D Tilt Hover Effects:** Kartu hewan peliharaan bereaksi miring secara tiga dimensi mengikuti arah kursor mouse ketika disentuh (*hover*).
+- **Floating Parallax Elements:** Ornamen abstrak di latar belakang yang bergeser perlahan sesuai pergerakan mouse memberikan efek kedalaman ruang (parallax).
 
 ### 🛡️ Dashboard Admin (Khusus Admin/Staff)
 - **Autentikasi Aman:** Dashboard *hanya* dapat diakses oleh admin yang sudah login.
