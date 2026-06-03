@@ -7,8 +7,25 @@ from .models import Pet
 from .forms import PetForm, RegisterForm
 
 def home(request):
-    pets = Pet.objects.filter(status='Available').order_by('-created_at')
-    return render(request, 'home.html', {'pets': pets})
+    pets = Pet.objects.filter(status='Available')
+    
+    search_query = request.GET.get('q', '')
+    if search_query:
+        pets = pets.filter(name__icontains=search_query)
+        
+    species_query = request.GET.get('species', '')
+    if species_query:
+        pets = pets.filter(species=species_query)
+        
+    pets = pets.order_by('-created_at')
+    
+    context = {
+        'pets': pets,
+        'search_query': search_query,
+        'species_query': species_query,
+        'species_choices': Pet.SPECIES_CHOICES
+    }
+    return render(request, 'home.html', context)
 
 def pet_detail(request, pk):
     pet = get_object_or_404(Pet, pk=pk)

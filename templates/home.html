@@ -23,11 +23,33 @@
 
 <!-- Pets Grid -->
 <div id="pets" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="flex justify-between items-end mb-10">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
         <div>
             <h2 class="text-3xl font-bold text-gray-900">Sahabat Baru Anda</h2>
             <p class="text-gray-500 mt-2">Pilih hewan peliharaan yang cocok dengan Anda.</p>
         </div>
+        
+        <!-- Search and Filter Form -->
+        <form method="get" action="{% url 'home' %}#pets" class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-grow sm:min-w-[250px]">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Cari nama hewan..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white shadow-sm text-sm">
+            </div>
+            <select name="species" class="w-full sm:w-auto py-3 px-4 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white shadow-sm text-sm text-gray-700 font-medium appearance-none" onchange="this.form.submit()">
+                <option value="">Semua Jenis</option>
+                {% for value, label in species_choices %}
+                    <option value="{{ value }}" {% if species_query == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="hidden sm:block bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-500 transition shadow-md">
+                Filter
+            </button>
+            <button type="submit" class="sm:hidden w-full bg-orange-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-600 transition shadow-md mt-2">
+                Cari & Filter
+            </button>
+        </form>
     </div>
 
     {% if pets %}
@@ -65,7 +87,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
         </svg>
         <h3 class="mt-2 text-sm font-medium text-gray-900">Belum Ada Hewan</h3>
-        <p class="mt-1 text-sm text-gray-500">Saat ini belum ada hewan peliharaan yang ditambahkan oleh Admin.</p>
+        <p class="mt-1 text-sm text-gray-500">
+            {% if search_query or species_query %}
+                Tidak ada hewan yang cocok dengan kriteria pencarian Anda. <a href="{% url 'home' %}#pets" class="text-orange-500 hover:underline">Hapus Filter</a>.
+            {% else %}
+                Saat ini belum ada hewan peliharaan yang ditambahkan oleh Admin.
+            {% endif %}
+        </p>
     </div>
     {% endif %}
 </div>
