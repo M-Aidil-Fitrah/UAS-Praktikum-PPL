@@ -14,6 +14,7 @@ urlpatterns = [
     # Buyer URLs
     path('adopt/<int:pk>/', views.adopt_pet, name='adopt_pet'),
     path('my-adoptions/', views.my_adoptions, name='my_adoptions'),
+    path('profile/', views.user_profile, name='user_profile'),
     
     # Dashboard URLs
     path('dashboard/', views.dashboard_index, name='dashboard_index'),

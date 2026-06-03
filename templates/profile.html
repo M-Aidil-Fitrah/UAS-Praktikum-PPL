@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profil Pengguna - AdoptMe{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-12">
+    <div class="mb-8 flex items-center justify-between">
+        <h1 class="text-3xl font-extrabold text-gray-900">Profil Saya</h1>
+        <a href="{% url 'home' %}" class="text-gray-500 hover:text-orange-500 transition font-medium text-sm">
+            Kembali ke Beranda
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+        <div class="p-8 md:p-10">
+            <div class="flex flex-col md:flex-row items-center gap-6 mb-8 border-b border-gray-100 pb-8">
+                <div class="w-24 h-24 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center border-4 border-white shadow-md overflow-hidden shrink-0">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    {% endif %}
+                </div>
+                <div class="text-center md:text-left">
+                    <h2 class="text-2xl font-bold text-gray-900">{{ user.get_full_name|default:user.username }}</h2>
+                    <p class="text-gray-500">{{ user.email }}</p>
+                    <p class="text-sm font-medium text-orange-600 mt-1">Anggota sejak {{ user.date_joined|date:"d M Y" }}</p>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="flex flex-col">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ field.label }}</label>
+                    <div class="relative">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                    <p class="mt-1.5 text-xs font-medium text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                    <p class="mt-1.5 text-sm font-medium text-red-600">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="pt-6">
+                    <button type="submit" class="w-full bg-orange-500 text-white rounded-xl px-4 py-3 font-bold hover:bg-orange-600 transition duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

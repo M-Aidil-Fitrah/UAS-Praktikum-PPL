@@ -70,6 +70,21 @@
             </tbody>
         </table>
     </div>
+    {% if page_obj_pets.has_other_pages %}
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+        <div class="text-sm text-gray-500">
+            Halaman {{ page_obj_pets.number }} dari {{ page_obj_pets.paginator.num_pages }}
+        </div>
+        <div class="flex gap-2">
+            {% if page_obj_pets.has_previous %}
+            <a href="?page={{ page_obj_pets.previous_page_number }}{% if request.GET.req_page %}&req_page={{ request.GET.req_page }}{% endif %}" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">Sebelumnya</a>
+            {% endif %}
+            {% if page_obj_pets.has_next %}
+            <a href="?page={{ page_obj_pets.next_page_number }}{% if request.GET.req_page %}&req_page={{ request.GET.req_page }}{% endif %}" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">Selanjutnya</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Pending Adoption Requests Section -->
@@ -141,5 +156,20 @@
             </tbody>
         </table>
     </div>
+    {% if page_obj_req.has_other_pages %}
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+        <div class="text-sm text-gray-500">
+            Halaman {{ page_obj_req.number }} dari {{ page_obj_req.paginator.num_pages }}
+        </div>
+        <div class="flex gap-2">
+            {% if page_obj_req.has_previous %}
+            <a href="?req_page={{ page_obj_req.previous_page_number }}{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">Sebelumnya</a>
+            {% endif %}
+            {% if page_obj_req.has_next %}
+            <a href="?req_page={{ page_obj_req.next_page_number }}{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">Selanjutnya</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

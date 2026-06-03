@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .models import Pet, AdoptionRequest
-from .forms import PetForm, RegisterForm, AdoptionRequestForm
+from .models import Pet, AdoptionRequest, UserProfile
+from .forms import PetForm, RegisterForm, AdoptionRequestForm, UserProfileForm
 
 def home(request):
     pets = Pet.objects.filter(status='Available')
@@ -20,8 +21,13 @@ def home(request):
         
     pets = pets.order_by('-created_at')
     
+    paginator = Paginator(pets, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     context = {
-        'pets': pets,
+        'pets': page_obj,
+        'page_obj': page_obj,
         'search_query': search_query,
         'species_query': species_query,
         'species_choices': Pet.SPECIES_CHOICES
@@ -63,6 +69,21 @@ def adopt_pet(request, pk):
 def my_adoptions(request):
     pets = Pet.objects.filter(adopter=request.user).order_by('-updated_at')
     return render(request, 'my_adoptions.html', {'pets': pets})
+
+@login_required
+def user_profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil berhasil diperbarui!')
+            return redirect('user_profile')
+    else:
+        form = UserProfileForm(instance=profile)
+        
+    return render(request, 'profile.html', {'form': form})
 
 # --- Custom Dashboard Views ---
 
@@ -106,8 +127,21 @@ def user_logout(request):
 @staff_member_required(login_url='user_login')
 def dashboard_index(request):
     pets = Pet.objects.all().order_by('-created_at')
+    paginator_pets = Paginator(pets, 10)
+    page_number_pets = request.GET.get('page')
+    page_obj_pets = paginator_pets.get_page(page_number_pets)
+    
     pending_requests = AdoptionRequest.objects.filter(status='Pending').order_by('-created_at')
-    return render(request, 'dashboard/index.html', {'pets': pets, 'pending_requests': pending_requests})
+    paginator_req = Paginator(pending_requests, 10)
+    page_number_req = request.GET.get('req_page')
+    page_obj_req = paginator_req.get_page(page_number_req)
+    
+    return render(request, 'dashboard/index.html', {
+        'pets': page_obj_pets, 
+        'pending_requests': page_obj_req,
+        'page_obj_pets': page_obj_pets,
+        'page_obj_req': page_obj_req
+    })
 
 @staff_member_required(login_url='user_login')
 def dashboard_pet_create(request):

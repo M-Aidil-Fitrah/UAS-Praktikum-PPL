@@ -38,3 +38,16 @@ class AdoptionRequestForm(forms.ModelForm):
             'experience': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 3, 'placeholder': 'Apakah Anda pernah memelihara hewan sebelumnya? Jika ya, ceritakan sedikit.'}),
         }
 
+from .models import UserProfile
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['phone_number', 'address', 'avatar']
+        widgets = {
+            'phone_number': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'placeholder': 'Contoh: 081234567890'}),
+            'address': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 3, 'placeholder': 'Alamat lengkap tempat tinggal Anda'}),
+            'avatar': forms.FileInput(attrs={'class': 'w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer'}),
+        }
+
+
