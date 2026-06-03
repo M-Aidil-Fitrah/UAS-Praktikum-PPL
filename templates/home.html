@@ -6,17 +6,29 @@
 {% block content %}
 
 <!-- Hero Section -->
-<section class="border-b border-gray-100 py-20">
-    <div class="max-w-6xl mx-auto px-6">
+<section class="border-b border-gray-100 py-20 relative overflow-hidden">
+    <!-- Floating Decorative Elements -->
+    <div class="absolute top-10 left-10 w-24 h-24 bg-gray-50 rounded-full mix-blend-multiply opacity-50 parallax-shape" data-speed="2"></div>
+    <div class="absolute top-40 right-20 w-32 h-32 bg-gray-100 rounded-full mix-blend-multiply opacity-50 parallax-shape" data-speed="-1"></div>
+    <div class="absolute bottom-10 left-1/3 w-16 h-16 bg-gray-50 rounded-full mix-blend-multiply opacity-50 parallax-shape" data-speed="1.5"></div>
+
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
         <div class="max-w-2xl">
-            <p class="text-sm font-medium text-gray-400 tracking-widest uppercase mb-5">Platform Adopsi Hewan</p>
+            <div class="overflow-hidden mb-5">
+                <p class="text-sm font-medium text-gray-400 tracking-widest uppercase transform translate-y-full hero-elem">Platform Adopsi Hewan</p>
+            </div>
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-5">
-                Setiap hewan berhak<br>mendapat rumah yang baik.
+                <div class="overflow-hidden"><span class="block transform translate-y-full hero-elem">Setiap hewan berhak</span></div>
+                <div class="overflow-hidden"><span class="block transform translate-y-full hero-elem">mendapat rumah yang baik.</span></div>
             </h1>
-            <p class="text-gray-500 text-base leading-relaxed mb-8 max-w-lg">
-                Temukan hewan peliharaan yang menunggu untuk menjadi bagian dari keluarga Anda. Proses adopsi yang mudah dan transparan.
-            </p>
-            <a href="#pets" class="inline-block text-sm font-medium bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">Lihat Hewan Tersedia</a>
+            <div class="overflow-hidden mb-8 max-w-lg">
+                <p class="text-gray-500 text-base leading-relaxed transform translate-y-full hero-elem">
+                    Temukan hewan peliharaan yang menunggu untuk menjadi bagian dari keluarga Anda. Proses adopsi yang mudah dan transparan.
+                </p>
+            </div>
+            <div class="overflow-hidden">
+                <a href="#pets" class="inline-block text-sm font-medium bg-gray-900 text-white px-6 py-3 rounded-md transition transform translate-y-full hero-elem magnetic-btn">Lihat Hewan Tersedia</a>
+            </div>
         </div>
     </div>
 </section>
@@ -57,7 +69,7 @@
         {% if pets %}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {% for pet in pets %}
-            <a href="{% url 'pet_detail' pet.pk %}" class="group border border-gray-100 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-md transition-all duration-200 flex flex-col bg-white">
+            <a href="{% url 'pet_detail' pet.pk %}" class="pet-card opacity-0 group border border-gray-100 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-md transition-shadow duration-300 flex flex-col bg-white" style="transform: perspective(1000px);">
                 <div class="w-full h-52 bg-gray-50 overflow-hidden">
                     {% if pet.photo %}
                         <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
@@ -116,4 +128,112 @@
 
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        // Register ScrollTrigger
+        if (typeof gsap !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 1. Intro Timeline (Preloader & Hero Reveal)
+            const tl = gsap.timeline();
+
+            // Preloader Animation
+            const preloader = document.getElementById('preloader');
+            const preloaderLogo = document.getElementById('preloader-logo');
+
+            if(preloader) {
+                tl.to(preloaderLogo, { y: 0, opacity: 1, duration: 0.8, ease: "power4.out" })
+                  .to(preloaderLogo, { y: -50, opacity: 0, duration: 0.6, ease: "power3.in", delay: 0.3 })
+                  .to(preloader, { yPercent: -100, duration: 1, ease: "expo.inOut" }, "-=0.3")
+                  .set(preloader, { display: "none" });
+            }
+
+            // Hero Text Reveal
+            tl.to(".hero-elem", {
+                y: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: "power4.out"
+            }, "-=0.5");
+
+            // 2. Pet Cards ScrollTrigger (Fade & Slide Up)
+            gsap.utils.toArray('.pet-card').forEach((card, i) => {
+                gsap.fromTo(card, 
+                    { opacity: 0, y: 50, rotationX: 10 },
+                    {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top bottom-=50",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 1, 
+                        y: 0, 
+                        rotationX: 0,
+                        duration: 0.8, 
+                        ease: "power3.out",
+                        delay: (i % 4) * 0.1 // Stagger per row
+                    }
+                );
+            });
+
+            // 3. Magnetic Button Effect
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3, ease: "power2.out" });
+                });
+                btn.addEventListener('mouseleave', () => {
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)" });
+                });
+            });
+
+            // 4. Parallax Floating Shapes
+            document.addEventListener("mousemove", (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 100;
+                const y = (e.clientY / window.innerHeight - 0.5) * 100;
+                
+                gsap.utils.toArray('.parallax-shape').forEach(shape => {
+                    const speed = shape.getAttribute('data-speed');
+                    gsap.to(shape, {
+                        x: x * speed,
+                        y: y * speed,
+                        duration: 1,
+                        ease: "power1.out"
+                    });
+                });
+            });
+
+            // 5. 3D Tilt Effect on Pet Cards
+            const petCards = document.querySelectorAll('.pet-card');
+            petCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    
+                    gsap.to(card, {
+                        rotationX: rotateX,
+                        rotationY: rotateY,
+                        transformPerspective: 1000,
+                        ease: "power1.out",
+                        duration: 0.3
+                    });
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { rotationX: 0, rotationY: 0, duration: 0.5, ease: "power2.out" });
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}
