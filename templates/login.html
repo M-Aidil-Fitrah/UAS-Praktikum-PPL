@@ -26,15 +26,15 @@
                 </div>
                 {% endif %}
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                    <input type="text" name="username" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2" required>
+                <div class="relative">
+                    <input type="text" id="username" name="username" class="block px-4 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-orange-500 peer" placeholder=" " required>
+                    <label for="username" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-focus:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Username</label>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" name="password" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2" required>
+                <div class="relative">
+                    <input type="password" id="password" name="password" class="block px-4 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-orange-500 peer" placeholder=" " required>
+                    <label for="password" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-focus:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Password</label>
                 </div>
-                <button type="submit" class="w-full bg-orange-500 text-white rounded-lg px-4 py-3 font-bold hover:bg-orange-600 transition shadow-lg hover:shadow-xl">
+                <button type="submit" class="w-full bg-orange-500 text-white rounded-xl px-4 py-3 font-bold hover:bg-orange-600 transition duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
                     Masuk
                 </button>
                 <div class="text-center mt-4">
