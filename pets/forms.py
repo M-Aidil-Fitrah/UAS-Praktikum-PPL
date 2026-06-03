@@ -27,3 +27,14 @@ class RegisterForm(UserCreationForm):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2'})
 
+from .models import AdoptionRequest
+
+class AdoptionRequestForm(forms.ModelForm):
+    class Meta:
+        model = AdoptionRequest
+        fields = ['reason', 'experience']
+        widgets = {
+            'reason': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 4, 'placeholder': 'Ceritakan alasan Anda ingin mengadopsi hewan ini...'}),
+            'experience': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 px-4 py-2', 'rows': 3, 'placeholder': 'Apakah Anda pernah memelihara hewan sebelumnya? Jika ya, ceritakan sedikit.'}),
+        }
+

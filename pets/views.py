@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Pet
-from .forms import PetForm, RegisterForm
+from django.contrib import messages
+from .models import Pet, AdoptionRequest
+from .forms import PetForm, RegisterForm, AdoptionRequestForm
 
 def home(request):
     pets = Pet.objects.filter(status='Available')
@@ -34,11 +35,29 @@ def pet_detail(request, pk):
 @login_required
 def adopt_pet(request, pk):
     pet = get_object_or_404(Pet, pk=pk)
-    if pet.status == 'Available':
-        pet.status = 'Pending'
-        pet.adopter = request.user
-        pet.save()
-    return redirect('pet_detail', pk=pk)
+    if pet.status != 'Available':
+        messages.error(request, "Maaf, hewan ini tidak tersedia untuk diadopsi saat ini.")
+        return redirect('pet_detail', pk=pk)
+        
+    if request.method == 'POST':
+        form = AdoptionRequestForm(request.POST)
+        if form.is_valid():
+            adoption_req = form.save(commit=False)
+            adoption_req.pet = pet
+            adoption_req.user = request.user
+            adoption_req.save()
+            
+            # Ubah status hewan menjadi pending
+            pet.status = 'Pending'
+            pet.adopter = request.user
+            pet.save()
+            
+            messages.success(request, "Pengajuan adopsi berhasil dikirim! Menunggu persetujuan admin.")
+            return redirect('my_adoptions')
+    else:
+        form = AdoptionRequestForm()
+        
+    return render(request, 'adopt_form.html', {'form': form, 'pet': pet})
 
 @login_required
 def my_adoptions(request):
@@ -87,7 +106,8 @@ def user_logout(request):
 @staff_member_required(login_url='user_login')
 def dashboard_index(request):
     pets = Pet.objects.all().order_by('-created_at')
-    return render(request, 'dashboard/index.html', {'pets': pets})
+    pending_requests = AdoptionRequest.objects.filter(status='Pending').order_by('-created_at')
+    return render(request, 'dashboard/index.html', {'pets': pets, 'pending_requests': pending_requests})
 
 @staff_member_required(login_url='user_login')
 def dashboard_pet_create(request):
@@ -122,19 +142,29 @@ def dashboard_pet_delete(request, pk):
 
 @staff_member_required(login_url='user_login')
 def dashboard_approve_pet(request, pk):
-    pet = get_object_or_404(Pet, pk=pk)
-    if request.method == 'POST' and pet.status == 'Pending':
+    req = get_object_or_404(AdoptionRequest, pk=pk)
+    if request.method == 'POST' and req.status == 'Pending':
+        req.status = 'Approved'
+        req.save()
+        
+        pet = req.pet
         pet.status = 'Adopted'
         pet.save()
+        messages.success(request, f"Adopsi {pet.name} oleh {req.user.username} disetujui.")
     return redirect('dashboard_index')
 
 @staff_member_required(login_url='user_login')
 def dashboard_reject_pet(request, pk):
-    pet = get_object_or_404(Pet, pk=pk)
-    if request.method == 'POST' and pet.status == 'Pending':
+    req = get_object_or_404(AdoptionRequest, pk=pk)
+    if request.method == 'POST' and req.status == 'Pending':
+        req.status = 'Rejected'
+        req.save()
+        
+        pet = req.pet
         pet.status = 'Available'
         pet.adopter = None
         pet.save()
+        messages.error(request, f"Adopsi {pet.name} oleh {req.user.username} ditolak.")
     return redirect('dashboard_index')
 
 

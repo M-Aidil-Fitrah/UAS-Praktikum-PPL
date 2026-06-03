@@ -55,16 +55,6 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div class="flex justify-end gap-2 items-center">
-                            {% if pet.status == 'Pending' %}
-                                <form action="{% url 'dashboard_approve_pet' pet.pk %}" method="post" class="inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-green-700 bg-green-100 hover:bg-green-200 px-3 py-1.5 rounded-lg font-bold transition shadow-sm" title="Setujui">✓ Setujui</button>
-                                </form>
-                                <form action="{% url 'dashboard_reject_pet' pet.pk %}" method="post" class="inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg font-bold transition shadow-sm" title="Tolak">✗ Tolak</button>
-                                </form>
-                            {% endif %}
                             <a href="{% url 'dashboard_pet_update' pet.pk %}" class="text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg font-bold transition shadow-sm">Edit</a>
                             <a href="{% url 'dashboard_pet_delete' pet.pk %}" class="text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg font-bold transition shadow-sm">Hapus</a>
                         </div>
@@ -74,6 +64,77 @@
                 <tr>
                     <td colspan="5" class="px-6 py-10 text-center text-gray-500">
                         Belum ada data hewan. Silakan tambah data baru.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pending Adoption Requests Section -->
+<div class="mt-12 mb-6 flex justify-between items-center">
+    <h2 class="text-2xl font-bold text-gray-900">Permintaan Adopsi Masuk</h2>
+</div>
+
+<div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden mb-12">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tgl Pengajuan</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pengadopsi</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Hewan</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Alasan & Pengalaman</th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for req in pending_requests %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 font-medium">{{ req.created_at|date:"d M Y" }}</div>
+                        <div class="text-xs text-gray-500">{{ req.created_at|time:"H:i" }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-bold text-gray-900">{{ req.user.get_full_name|default:req.user.username }}</div>
+                        <div class="text-xs text-gray-500">{{ req.user.email }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            {% if req.pet.photo %}
+                            <img class="h-8 w-8 rounded object-cover mr-2" src="{{ req.pet.photo.url }}" alt="{{ req.pet.name }}">
+                            {% endif %}
+                            <span class="text-sm font-medium text-orange-600">{{ req.pet.name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900 max-w-xs truncate" title="{{ req.reason }}">
+                            <strong>Alasan:</strong> {{ req.reason }}
+                        </div>
+                        {% if req.experience %}
+                        <div class="text-xs text-gray-500 mt-1 max-w-xs truncate" title="{{ req.experience }}">
+                            <strong>Pengalaman:</strong> {{ req.experience }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex justify-end gap-2 items-center">
+                            <form action="{% url 'dashboard_approve_pet' req.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-green-700 bg-green-100 hover:bg-green-200 px-3 py-1.5 rounded-lg font-bold transition shadow-sm" title="Setujui">✓ Setujui</button>
+                            </form>
+                            <form action="{% url 'dashboard_reject_pet' req.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg font-bold transition shadow-sm" title="Tolak">✗ Tolak</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-10 text-center text-gray-500">
+                        Belum ada permintaan adopsi baru.
                     </td>
                 </tr>
                 {% endfor %}

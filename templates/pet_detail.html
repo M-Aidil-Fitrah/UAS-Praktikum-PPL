@@ -47,12 +47,9 @@
                     {% if pet.status == 'Available' %}
                         {% if request.user.is_authenticated %}
                             {% if not request.user.is_staff %}
-                                <form action="{% url 'adopt_pet' pet.pk %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="block w-full text-center bg-orange-500 text-white px-6 py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg hover:shadow-xl">
-                                        Adopsi Sekarang
-                                    </button>
-                                </form>
+                                <a href="{% url 'adopt_pet' pet.pk %}" class="block w-full text-center bg-orange-500 text-white px-6 py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg hover:shadow-xl">
+                                    Adopsi Sekarang
+                                </a>
                             {% else %}
                                 <div class="bg-gray-100 text-gray-500 p-4 rounded-xl text-center text-sm font-medium">
                                     Admin tidak bisa mengadopsi hewan.
