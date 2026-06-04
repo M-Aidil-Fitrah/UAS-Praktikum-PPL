@@ -1,122 +1,287 @@
 # AdoptMe - Platform Adopsi Hewan Peliharaan
 
-AdoptMe adalah aplikasi web berbasis Django yang dirancang untuk mempertemukan hewan peliharaan yang membutuhkan rumah dengan calon pengadopsi. Aplikasi ini memiliki antarmuka publik yang ramah pengguna dan dashboard khusus admin yang dikembangkan dari nol untuk mengelola CRUD hewan serta menyetujui pengajuan adopsi.
+AdoptMe adalah aplikasi web Django untuk mengelola dan mengajukan adopsi hewan peliharaan. Aplikasi ini memiliki halaman publik untuk calon pengadopsi, dashboard custom untuk admin/staff, dan integrasi Django Admin bawaan.
+
+Desain saat ini memakai konsep **Dark Editorial Pet Sanctuary**: antarmuka publik bernuansa gelap, hangat, sinematik, dan beraksen terracotta. Dashboard admin dibuat lebih operasional dengan tema light-warm yang tetap konsisten dengan identitas visual AdoptMe.
 
 ---
 
-## ✨ Fitur Utama
+## Fitur Utama
 
-### 👤 Halaman Pengguna (Publik & Member)
-- **Landing Page Publik:** Semua orang dapat melihat daftar hewan peliharaan yang tersedia tanpa harus login.
-- **Pencarian & Filter:** Mencari hewan berdasarkan nama atau memfilternya berdasarkan jenis spesies (Kucing, Anjing, Lainnya).
-- **Detail Informasi Hewan:** Melihat informasi rinci tentang hewan (umur, status, foto, dan deskripsi).
-- **Sistem Pengajuan Adopsi:** Pengguna yang sudah login dapat mengisi formulir pengajuan adopsi terperinci (alasan & pengalaman).
-- **Profil Pengguna:** Halaman profil bagi pengguna untuk memperbarui informasi kontak (Nomor Telepon, Alamat, Foto Profil).
-- **Riwayat Adopsi:** Pengguna dapat melacak status pengajuan hewan adopsinya sendiri.
-- **Validasi Keamanan Password:** Indikator kekuatan password (minimal 8 karakter & angka) secara *real-time* disertai toggle buka/tutup kata sandi.
-- **Pagination & UI Dinamis:** Menampilkan data secara modular (8-10 per halaman) dengan desain antarmuka berbasis Tailwind CSS yang responsif dan modern.
+### Pengguna Publik & Member
+- Melihat daftar hewan yang tersedia untuk diadopsi.
+- Mencari hewan berdasarkan nama.
+- Filter hewan berdasarkan spesies: Kucing, Anjing, dan Lainnya.
+- Melihat detail hewan, foto, umur, deskripsi, dan status adopsi.
+- Register dan login akun pengguna.
+- Mengajukan adopsi dengan alasan dan pengalaman memelihara hewan.
+- Melihat riwayat pengajuan adopsi sendiri berdasarkan data `AdoptionRequest`.
+- Mengelola profil kontak: nomor telepon, alamat, dan avatar.
 
-### 🎨 Estetika & Interaktivitas Premium (GSAP)
-- **Minimalist Stage Preloader:** Transisi layar pembuka berupa tirai penutup gelap yang terangkat ke atas secara sinematik saat pertama kali membuka halaman utama.
-- **Agency-Style Text Reveal:** Judul utama halaman landing terkuak (*reveal*) mulus dari bawah baris teks.
-- **Magnetic CTA Button:** Tombol aksi utama secara interaktif mendekat dan menempel halus mengikuti gerakan kursor mouse pengguna.
-- **3D Tilt Hover Effects:** Kartu hewan peliharaan bereaksi miring secara tiga dimensi mengikuti arah kursor mouse ketika disentuh (*hover*).
-- **Floating Parallax Elements:** Ornamen abstrak di latar belakang yang bergeser perlahan sesuai pergerakan mouse memberikan efek kedalaman ruang (parallax).
+### Admin / Staff
+- Dashboard custom di `/dashboard/`.
+- Statistik data hewan dan permintaan adopsi.
+- CRUD data hewan: tambah, edit, hapus.
+- Review permintaan adopsi.
+- Setujui atau tolak pengajuan adopsi.
+- Link langsung ke Django Admin bawaan di `/admin/`.
+- Admin tidak dapat mengajukan adopsi, termasuk melalui URL langsung.
 
-### 🛡️ Dashboard Admin (Khusus Admin/Staff)
-- **Autentikasi Aman:** Dashboard *hanya* dapat diakses oleh admin yang sudah login.
-- **CRUD Hewan Peliharaan:** Fitur lengkap untuk Tambah (Create), Baca (Read), Ubah (Update), dan Hapus (Delete) data hewan.
-- **Manajemen Permintaan Adopsi:** Admin dapat meninjau alasan dan pengalaman calon pengadopsi, kemudian memutuskan untuk **Setujui** atau **Tolak** permohonan secara langsung.
-- **Notifikasi (Toast):** Memberikan umpan balik instan setiap kali Admin melakukan suatu aksi (berhasil ditambah, disetujui, dll).
-
----
-
-## 🛠️ Teknologi & Framework
-
-- **Backend:** [Django (Python)](https://www.djangoproject.com/)
-- **Database:** MySQL
-- **Frontend / Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Ikon:** Heroicons (SVG)
+### UI & Interaksi
+- Tema publik dark editorial dengan font Cormorant Garamond, DM Sans, dan Space Mono.
+- Preloader halaman utama.
+- GSAP animation untuk reveal, hover, cursor, dan scroll effects.
+- Custom status badge untuk Tersedia, Pending, Diadopsi, Disetujui, dan Ditolak.
+- Halaman auth compact dengan panel gambar hewan dari CDN.
+- Dashboard admin dengan sidebar gelap, kartu statistik beraksen, dan tabel warm-light.
 
 ---
 
-## ⚙️ Panduan Instalasi & Penggunaan
+## Teknologi
 
-Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di *local machine* Anda.
+- Backend: Django 5.2.14
+- Database: MySQL
+- Frontend styling: Tailwind CSS + custom CSS variables
+- Animasi: GSAP + ScrollTrigger CDN
+- Media upload: Django `ImageField`
+- Font: Google Fonts
+- Runtime frontend tooling: Node.js + Tailwind CSS
 
-### 1. Prasyarat (*Prerequisites*)
-Pastikan perangkat Anda sudah terinstal:
-- **Python 3.9+**
-- **Node.js & npm** (untuk *build* Tailwind CSS)
-- **MySQL Server** (XAMPP, Laragon, dsb.)
+---
 
-### 2. Konfigurasi Database
-1. Buka MySQL Anda (misal lewat phpMyAdmin).
-2. Buat database baru dengan nama: **`db_adoptme`**.
-3. Pastikan username MySQL Anda adalah `root` dan password kosong (`''`). Jika berbeda, Anda bisa menyesuaikannya di file `adopt_project/settings.py` pada bagian `DATABASES`.
+## Struktur Data Utama
 
-### 3. Setup *Virtual Environment* & Dependensi Python
-Buka terminal/CMD di direktori proyek, lalu jalankan:
+### `Pet`
+Menyimpan data hewan:
+- nama
+- spesies
+- umur dalam bulan
+- deskripsi
+- foto
+- status adopsi: `Available`, `Pending`, `Adopted`
+- adopter
 
-```bash
-# Membuat virtual environment
-python -m venv venv
+### `AdoptionRequest`
+Menyimpan pengajuan adopsi:
+- hewan
+- user pengaju
+- alasan adopsi
+- pengalaman memelihara
+- status: `Pending`, `Approved`, `Rejected`
 
-# Aktivasi virtual environment (Windows)
+### `UserProfile`
+Menyimpan profil tambahan user:
+- nomor telepon
+- alamat
+- avatar
+
+---
+
+## Prasyarat
+
+Pastikan sudah tersedia:
+
+- Python 3.10+
+- MySQL Server, misalnya Laragon atau XAMPP
+- Node.js dan npm
+- Git
+
+---
+
+## Setup Project
+
+### 1. Masuk ke folder project
+
+```powershell
+cd "C:\Users\Lenovo\Downloads\Fitrah\Tugas\Lab PPL\UAS"
+```
+
+### 2. Aktifkan virtual environment
+
+Jika folder `venv` sudah ada:
+
+```powershell
 .\venv\Scripts\activate
-# Aktivasi virtual environment (Mac/Linux)
-# source venv/bin/activate
-
-# Install dependensi (Django, mysqlclient, dll)
-pip install django mysqlclient pillow
 ```
 
-### 4. Setup Dependensi Node (Tailwind CSS)
-Buka terminal baru atau gunakan terminal yang sama, pastikan Anda berada di direktori proyek:
-```bash
-# Install paket npm (tailwindcss, dsb)
-npm install
+Jika belum ada:
 
-# Build CSS awal
-npm run build:css
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
+pip install django pymysql pillow
 ```
-*(Catatan: Anda dapat membiarkan `npm run build:css` berjalan di belakang jika Anda ingin mengubah styling)*
 
-### 5. Migrasi Database
-Kembali ke terminal tempat *virtual environment* Python aktif, jalankan:
-```bash
-python manage.py makemigrations
+Catatan: project ini memakai backend MySQL Django. Pastikan dependency MySQL yang digunakan di environment sudah sesuai dengan konfigurasi lokal.
+
+### 3. Siapkan database MySQL
+
+Buat database:
+
+```sql
+CREATE DATABASE db_adoptme;
+```
+
+Konfigurasi database berada di `adopt_project/settings.py`:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_adoptme',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+```
+
+Jika username/password MySQL berbeda, ubah bagian tersebut.
+
+### 4. Jalankan migrasi
+
+```powershell
 python manage.py migrate
 ```
 
-### 6. Buat Akun Superuser (Admin)
-Untuk mengakses Dashboard Admin, Anda perlu membuat akun superuser:
-```bash
+### 5. Buat akun admin
+
+```powershell
 python manage.py createsuperuser
 ```
-*(Ikuti instruksi pengisian username, email, dan password).*
 
-### 7. Jalankan Aplikasi
-```bash
-python manage.py runserver
+Admin/staff dapat mengakses:
+
+- Dashboard custom: `http://127.0.0.1:8000/dashboard/`
+- Django Admin: `http://127.0.0.1:8000/admin/`
+
+### 6. Install dependency frontend
+
+```powershell
+npm install
 ```
-Akses aplikasi melalui browser di: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+Build CSS:
+
+```powershell
+npm run build:css
+```
+
+Watch CSS saat development:
+
+```powershell
+npm run watch:css
+```
+
+Catatan: file yang dibaca browser adalah `static/css/output.css`. Custom design token utama berada di `static/css/input.css`.
+
+### 7. Jalankan server
+
+```powershell
+python manage.py runserver 127.0.0.1:8000
+```
+
+Buka:
+
+```text
+http://127.0.0.1:8000/
+```
 
 ---
 
-## 🔗 Struktur Navigasi Aplikasi
+## Route Penting
 
-- **Beranda Publik:** `http://127.0.0.1:8000/`
-- **Login / Register:** Dapat diakses melalui tombol di Navbar.
-- **Dashboard Admin:** `http://127.0.0.1:8000/dashboard/` *(Login menggunakan akun superuser yang Anda buat di Langkah 6).*
+| Route | Keterangan |
+|---|---|
+| `/` | Halaman utama dan katalog hewan |
+| `/pet/<id>/` | Detail hewan |
+| `/login/` | Login user |
+| `/register/` | Register user |
+| `/logout/` | Logout |
+| `/adopt/<id>/` | Form pengajuan adopsi |
+| `/my-adoptions/` | Riwayat pengajuan adopsi user |
+| `/profile/` | Profil user |
+| `/dashboard/` | Dashboard custom admin |
+| `/dashboard/pet/add/` | Tambah hewan |
+| `/dashboard/pet/edit/<id>/` | Edit hewan |
+| `/dashboard/pet/delete/<id>/` | Hapus hewan |
+| `/admin/` | Django Admin bawaan |
 
 ---
 
-## 📁 Struktur Direktori Penting
+## Struktur Folder
 
-- `adopt_project/` - Inti konfigurasi dan pengaturan Django (`settings.py`, `urls.py`).
-- `pets/` - Aplikasi utama (Model, View, Form, URL untuk publik dan admin).
-- `templates/` - Berisi seluruh file antarmuka (HTML).
-  - `templates/dashboard/` - Antarmuka khusus untuk Dashboard Admin.
-- `static/` - Berisi file aset statis dan hasil kompilasi CSS Tailwind (`output.css`).
-- `media/` - Tempat penyimpanan file unggahan (*Uploads*), seperti foto hewan dan foto profil pengguna.
+```text
+adopt_project/
+  settings.py
+  urls.py
+
+pets/
+  models.py
+  views.py
+  forms.py
+  urls.py
+  migrations/
+
+templates/
+  base.html
+  home.html
+  pet_detail.html
+  adopt_form.html
+  my_adoptions.html
+  profile.html
+  login.html
+  register.html
+  dashboard/
+    base.html
+    index.html
+    pet_form.html
+    pet_confirm_delete.html
+
+static/
+  css/
+    input.css
+    output.css
+
+media/
+  pets/
+  avatars/
+```
+
+---
+
+## Perintah Verifikasi
+
+Gunakan perintah berikut untuk memastikan project aman dijalankan:
+
+```powershell
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py showmigrations pets
+```
+
+Compile file Python:
+
+```powershell
+python -m compileall adopt_project pets
+```
+
+Build CSS:
+
+```powershell
+npm run build:css
+```
+
+---
+
+## Catatan Development
+
+- Pastikan MySQL/Laragon aktif sebelum menjalankan server.
+- `media/` digunakan untuk upload foto hewan dan avatar user.
+- Data halaman tidak statis; katalog, detail, dashboard, dan riwayat adopsi membaca data dari database.
+- `static/css/output.css` perlu diperbarui setelah mengubah `static/css/input.css`.
+- Dashboard custom hanya untuk user dengan `is_staff=True`.
+- User biasa tidak bisa mengakses dashboard admin.
+- Admin tidak bisa mengajukan adopsi.
+
