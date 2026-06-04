@@ -212,16 +212,29 @@ http://127.0.0.1:8000/
 
 ## Struktur Folder
 
+Struktur folder berikut memisahkan konfigurasi project, logika aplikasi, template tampilan, aset statis, dan file upload. Pembagian ini dibuat agar kode lebih mudah dibaca, dirawat, dan dijelaskan saat presentasi.
+
 ```text
+manage.py
+package.json
+tailwind.config.js
+
 adopt_project/
+  __init__.py
   settings.py
   urls.py
+  asgi.py
+  wsgi.py
 
 pets/
+  __init__.py
+  admin.py
+  apps.py
   models.py
   views.py
   forms.py
   urls.py
+  tests.py
   migrations/
 
 templates/
@@ -249,6 +262,46 @@ media/
   avatars/
 ```
 
+### Penjelasan Struktur
+
+| Folder/File | Fungsi |
+|---|---|
+| `manage.py` | Entry point command Django, digunakan untuk menjalankan server, migrasi, membuat superuser, dan perintah maintenance lain. |
+| `adopt_project/` | Folder konfigurasi utama project Django. |
+| `adopt_project/settings.py` | Menyimpan konfigurasi project seperti database MySQL, static/media file, installed apps, middleware, dan template directory. |
+| `adopt_project/urls.py` | URL root project. File ini menghubungkan route `/admin/` bawaan Django dan route aplikasi `pets`. |
+| `adopt_project/asgi.py` dan `adopt_project/wsgi.py` | Konfigurasi entry point server ASGI/WSGI jika aplikasi dideploy. |
+| `pets/` | Aplikasi utama AdoptMe. Semua fitur inti adopsi berada di folder ini. |
+| `pets/models.py` | Mendefinisikan tabel database: `Pet`, `AdoptionRequest`, dan `UserProfile`. |
+| `pets/views.py` | Menyimpan logic halaman: katalog hewan, detail hewan, pengajuan adopsi, profil user, auth, dashboard admin, approval, dan reject pengajuan. |
+| `pets/forms.py` | Menyimpan form Django untuk data hewan, registrasi user, pengajuan adopsi, dan profil user. |
+| `pets/urls.py` | Menyimpan route aplikasi seperti `/`, `/login/`, `/register/`, `/dashboard/`, dan route CRUD hewan. |
+| `pets/admin.py` | Tempat registrasi model ke Django Admin jika ingin dikelola melalui `/admin/`. |
+| `pets/migrations/` | Riwayat perubahan struktur database yang dijalankan melalui `python manage.py migrate`. |
+| `templates/` | Folder semua file HTML yang dirender Django. |
+| `templates/base.html` | Layout dasar halaman publik: navbar, footer, toast, cursor, dan script global. |
+| `templates/home.html` | Halaman utama/katalog hewan, search, filter spesies, pagination, hero section, dan pet cards. |
+| `templates/pet_detail.html` | Halaman detail satu hewan, status hewan, informasi lengkap, dan CTA pengajuan adopsi. |
+| `templates/adopt_form.html` | Form pengajuan adopsi yang terhubung dengan model `AdoptionRequest`. |
+| `templates/my_adoptions.html` | Riwayat pengajuan adopsi user berdasarkan data database. |
+| `templates/profile.html` | Halaman profil user untuk nomor telepon, alamat, dan avatar. |
+| `templates/login.html` dan `templates/register.html` | Halaman autentikasi compact dengan visual hewan dari CDN. |
+| `templates/dashboard/` | Folder template dashboard custom khusus admin/staff. |
+| `templates/dashboard/base.html` | Layout dashboard admin: sidebar, link dashboard, link website, link Django Admin, dan user info. |
+| `templates/dashboard/index.html` | Halaman utama dashboard: statistik, daftar hewan, tabel data, dan review queue pengajuan. |
+| `templates/dashboard/pet_form.html` | Form tambah/edit data hewan. |
+| `templates/dashboard/pet_confirm_delete.html` | Halaman konfirmasi hapus data hewan. |
+| `static/` | Folder aset statis project. |
+| `static/css/input.css` | Source CSS utama berisi Tailwind directives, design token, komponen UI, tema dashboard, dan custom styles. |
+| `static/css/output.css` | File CSS hasil build yang dibaca browser. File ini harus diperbarui setelah mengubah `input.css`. |
+| `media/` | Folder upload dari user/admin saat aplikasi berjalan. |
+| `media/pets/` | Tempat penyimpanan foto hewan. |
+| `media/avatars/` | Tempat penyimpanan foto profil user. |
+| `package.json` | Konfigurasi script npm untuk build/watch Tailwind CSS. |
+| `tailwind.config.js` | Konfigurasi Tailwind: path template, font, warna, animasi, dan token tambahan. |
+
+Alur sederhananya: user membuka route dari `pets/urls.py`, request diproses di `pets/views.py`, data diambil dari model pada `pets/models.py`, form berasal dari `pets/forms.py`, lalu hasilnya dirender ke file HTML di `templates/` dengan styling dari `static/css/output.css`.
+
 ---
 
 ## Perintah Verifikasi
@@ -274,14 +327,3 @@ npm run build:css
 ```
 
 ---
-
-## Catatan Development
-
-- Pastikan MySQL/Laragon aktif sebelum menjalankan server.
-- `media/` digunakan untuk upload foto hewan dan avatar user.
-- Data halaman tidak statis; katalog, detail, dashboard, dan riwayat adopsi membaca data dari database.
-- `static/css/output.css` perlu diperbarui setelah mengubah `static/css/input.css`.
-- Dashboard custom hanya untuk user dengan `is_staff=True`.
-- User biasa tidak bisa mengakses dashboard admin.
-- Admin tidak bisa mengajukan adopsi.
-
