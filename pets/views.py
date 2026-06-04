@@ -9,7 +9,8 @@ from .models import Pet, AdoptionRequest, UserProfile
 from .forms import PetForm, RegisterForm, AdoptionRequestForm, UserProfileForm
 
 def home(request):
-    pets = Pet.objects.filter(status='Available')
+    available_pets = Pet.objects.filter(status='Available')
+    pets = available_pets
     
     search_query = request.GET.get('q', '')
     if search_query:
@@ -20,6 +21,7 @@ def home(request):
         pets = pets.filter(species=species_query)
         
     pets = pets.order_by('-created_at')
+    featured_pet = available_pets.exclude(photo='').order_by('-created_at').first() or available_pets.order_by('-created_at').first()
     
     paginator = Paginator(pets, 8)
     page_number = request.GET.get('page')
@@ -30,7 +32,13 @@ def home(request):
         'page_obj': page_obj,
         'search_query': search_query,
         'species_query': species_query,
-        'species_choices': Pet.SPECIES_CHOICES
+        'species_choices': Pet.SPECIES_CHOICES,
+        'featured_pet': featured_pet,
+        'available_count': available_pets.count(),
+        'adopted_count': Pet.objects.filter(status='Adopted').count(),
+        'pending_pet_count': Pet.objects.filter(status='Pending').count(),
+        'pending_request_count': AdoptionRequest.objects.filter(status='Pending').count(),
+        'result_count': paginator.count,
     }
     return render(request, 'home.html', context)
 
@@ -41,6 +49,10 @@ def pet_detail(request, pk):
 @login_required
 def adopt_pet(request, pk):
     pet = get_object_or_404(Pet, pk=pk)
+    if request.user.is_staff:
+        messages.error(request, "Admin tidak dapat mengajukan adopsi hewan.")
+        return redirect('pet_detail', pk=pk)
+
     if pet.status != 'Available':
         messages.error(request, "Maaf, hewan ini tidak tersedia untuk diadopsi saat ini.")
         return redirect('pet_detail', pk=pk)
@@ -67,8 +79,13 @@ def adopt_pet(request, pk):
 
 @login_required
 def my_adoptions(request):
-    pets = Pet.objects.filter(adopter=request.user).order_by('-updated_at')
-    return render(request, 'my_adoptions.html', {'pets': pets})
+    adoption_requests = (
+        AdoptionRequest.objects
+        .filter(user=request.user)
+        .select_related('pet')
+        .order_by('-created_at')
+    )
+    return render(request, 'my_adoptions.html', {'adoption_requests': adoption_requests})
 
 @login_required
 def user_profile(request):
@@ -126,7 +143,8 @@ def user_logout(request):
 
 @staff_member_required(login_url='user_login')
 def dashboard_index(request):
-    pets = Pet.objects.all().order_by('-created_at')
+    all_pets = Pet.objects.all()
+    pets = all_pets.order_by('-created_at')
     paginator_pets = Paginator(pets, 10)
     page_number_pets = request.GET.get('page')
     page_obj_pets = paginator_pets.get_page(page_number_pets)
@@ -140,7 +158,12 @@ def dashboard_index(request):
         'pets': page_obj_pets, 
         'pending_requests': page_obj_req,
         'page_obj_pets': page_obj_pets,
-        'page_obj_req': page_obj_req
+        'page_obj_req': page_obj_req,
+        'total_pets': all_pets.count(),
+        'available_count': all_pets.filter(status='Available').count(),
+        'pending_pet_count': all_pets.filter(status='Pending').count(),
+        'adopted_count': all_pets.filter(status='Adopted').count(),
+        'pending_request_count': pending_requests.count(),
     })
 
 @staff_member_required(login_url='user_login')
@@ -200,5 +223,3 @@ def dashboard_reject_pet(request, pk):
         pet.save()
         messages.error(request, f"Adopsi {pet.name} oleh {req.user.username} ditolak.")
     return redirect('dashboard_index')
-
-

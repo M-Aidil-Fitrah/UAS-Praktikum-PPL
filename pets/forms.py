@@ -1,8 +1,8 @@
 from django import forms
 from .models import Pet
 
-BASE_INPUT = 'w-full px-3 py-2.5 text-sm border border-gray-200 rounded-md bg-white focus:outline-none focus:border-gray-400 transition placeholder-gray-400'
-BASE_FILE  = 'w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer'
+BASE_INPUT = 'w-full text-sm transition'
+BASE_FILE  = 'w-full text-sm transition'
 
 class PetForm(forms.ModelForm):
     class Meta:
@@ -35,8 +35,7 @@ class RegisterForm(UserCreationForm):
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': BASE_INPUT})
             field.help_text = ''  # Clear default help texts to save space
-            if 'password' in field_name:
-                field.widget.attrs.update({'placeholder': 'Masukkan password'})
+            field.widget.attrs.update({'placeholder': ' '})
 
 from .models import AdoptionRequest
 

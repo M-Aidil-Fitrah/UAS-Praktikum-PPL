@@ -1,54 +1,84 @@
 {% extends 'base.html' %}
 
-{% block title %}Adopsi Saya — AdoptMe{% endblock %}
+{% block title %}Adopsi Saya - AdoptMe{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-6 py-12">
-
-    <div class="mb-10">
-        <h1 class="text-2xl font-semibold text-gray-900">Adopsi Saya</h1>
-        <p class="text-sm text-gray-400 mt-1">Lacak status pengajuan adopsi hewan Anda.</p>
+<div class="page-shell">
+    <div style="margin-bottom:42px;" data-reveal>
+        <p class="font-mono-label" style="color:var(--accent);margin-bottom:12px;">Riwayat Pengajuan</p>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,6vw,4.2rem);font-weight:600;line-height:1;color:var(--text-primary);letter-spacing:-0.02em;">Adopsi Saya</h1>
+        <p style="font-size:14px;color:var(--text-secondary);margin-top:12px;max-width:560px;">Lacak status pengajuan adopsi Anda dari data yang tersimpan di database.</p>
     </div>
 
-    {% if pets %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {% for pet in pets %}
-        <div class="border border-gray-100 rounded-xl overflow-hidden hover:border-gray-200 hover:shadow-sm transition bg-white flex flex-col">
-            <div class="w-full h-48 bg-gray-50 overflow-hidden">
-                {% if pet.photo %}
-                    <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover">
-                {% else %}
-                    <div class="w-full h-full flex items-center justify-center text-gray-300">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    </div>
+    {% if adoption_requests %}
+    <div style="position:relative;display:grid;gap:18px;">
+        {% for req in adoption_requests %}
+        <article style="display:grid;grid-template-columns:42px minmax(0,1fr);gap:18px;" data-reveal>
+            <div style="position:relative;display:flex;justify-content:center;">
+                <span style="width:12px;height:12px;border-radius:999px;background:var(--accent);margin-top:26px;box-shadow:0 0 0 8px var(--accent-muted);"></span>
+                {% if not forloop.last %}
+                <span style="position:absolute;top:44px;bottom:-28px;width:1px;background:var(--border-faint);"></span>
                 {% endif %}
             </div>
 
-            <div class="p-5 flex-grow flex flex-col">
-                <div class="flex items-start justify-between gap-2 mb-1">
-                    <h3 class="font-semibold text-gray-900">{{ pet.name }}</h3>
-                    {% if pet.status == 'Pending' %}
-                        <span class="text-xs border border-yellow-200 text-yellow-600 px-2 py-0.5 rounded shrink-0">Menunggu</span>
-                    {% elif pet.status == 'Adopted' %}
-                        <span class="text-xs border border-green-200 text-green-600 px-2 py-0.5 rounded shrink-0">Disetujui</span>
+            <div style="background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:16px;overflow:hidden;display:grid;grid-template-columns:180px minmax(0,1fr);box-shadow:var(--shadow-card);">
+                <a href="{% url 'pet_detail' req.pet.pk %}" style="background:var(--bg-elevated);min-height:180px;">
+                    {% if req.pet.photo %}
+                    <img src="{{ req.pet.photo.url }}" alt="{{ req.pet.name }}" style="width:100%;height:100%;object-fit:cover;">
+                    {% else %}
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--border-visible);">
+                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+                    </div>
                     {% endif %}
-                </div>
-                <p class="text-sm text-gray-400 mb-4">{{ pet.get_species_display }} &middot; {{ pet.age }} bulan</p>
-                <a href="{% url 'pet_detail' pet.pk %}" class="mt-auto text-sm text-gray-700 font-medium hover:underline inline-flex items-center gap-1">
-                    Lihat Detail
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
+
+                <div style="padding:22px 24px;display:flex;flex-direction:column;gap:16px;">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                        <div>
+                            <p class="font-mono-label" style="color:var(--text-tertiary);margin-bottom:6px;">{{ req.created_at|date:"d M Y" }}</p>
+                            <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;line-height:1;color:var(--text-primary);font-weight:600;">{{ req.pet.name }}</h2>
+                            <p style="font-size:13px;color:var(--text-secondary);margin-top:6px;">{{ req.pet.get_species_display }} - {{ req.pet.age }} bulan</p>
+                        </div>
+
+                        {% if req.status == 'Pending' %}
+                        <span class="status-badge status-pending"><span class="status-dot"></span>Menunggu</span>
+                        {% elif req.status == 'Approved' %}
+                        <span class="status-badge status-approved">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m5 13 4 4L19 7"></path></svg>
+                            Disetujui
+                        </span>
+                        {% else %}
+                        <span class="status-badge status-rejected"><span class="status-dot"></span>Ditolak</span>
+                        {% endif %}
+                    </div>
+
+                    <div style="border-top:1px solid var(--border-faint);padding-top:16px;">
+                        <p class="font-mono-label" style="color:var(--text-tertiary);margin-bottom:8px;">Alasan</p>
+                        <p style="font-size:13px;line-height:1.65;color:var(--text-secondary);">{{ req.reason|truncatechars:180 }}</p>
+                    </div>
+
+                    <a href="{% url 'pet_detail' req.pet.pk %}" class="icon-link" style="margin-top:auto;">
+                        Lihat Detail
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
             </div>
-        </div>
+        </article>
         {% endfor %}
     </div>
-
     {% else %}
-    <div class="py-24 text-center border border-dashed border-gray-200 rounded-xl">
-        <p class="text-sm font-medium text-gray-400 mb-3">Anda belum mengajukan adopsi apapun.</p>
-        <a href="{% url 'home' %}" class="inline-block text-sm font-medium bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700 transition">Cari Hewan</a>
+    <div class="empty-state" data-reveal>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:18px;">Anda belum mengajukan adopsi apapun.</p>
+        <a href="{% url 'home' %}#pets" class="btn-primary">Cari Hewan</a>
     </div>
     {% endif %}
-
 </div>
+
+<style>
+    @media (max-width: 760px) {
+        article > div:last-child {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
 {% endblock %}

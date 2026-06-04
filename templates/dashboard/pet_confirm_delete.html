@@ -3,27 +3,28 @@
 {% block title %}Hapus Hewan{% endblock %}
 
 {% block content %}
-<div class="max-w-md">
-    <a href="{% url 'dashboard_index' %}" class="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition mb-8">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+<div style="max-width:520px;">
+    <a href="{% url 'dashboard_index' %}" class="icon-link" style="margin-bottom:28px;color:var(--text-tertiary);">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         Kembali
     </a>
 
-    <div class="bg-white border border-gray-100 rounded-xl p-8">
-        <div class="w-12 h-12 border border-red-100 bg-red-50 rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+    <section class="dashboard-card" style="padding:30px;">
+        <div style="width:52px;height:52px;border:1px solid rgba(220,60,60,0.18);background:rgba(220,60,60,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;color:#d93636;">
+            <svg width="26" height="26" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
         </div>
 
-        <h1 class="text-lg font-semibold text-gray-900 mb-2">Hapus data hewan?</h1>
-        <p class="text-sm text-gray-500 mb-8">
-            Anda akan menghapus data <strong class="font-medium text-gray-900">{{ pet.name }}</strong>. Tindakan ini tidak dapat dibatalkan.
+        <p class="font-mono-label" style="color:var(--accent);margin-bottom:8px;">Konfirmasi Hapus</p>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;line-height:1;color:var(--text-primary);font-weight:600;margin-bottom:14px;">Hapus data hewan?</h1>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:28px;">
+            Anda akan menghapus data <strong style="font-weight:600;color:var(--text-primary);">{{ pet.name }}</strong>. Tindakan ini tidak dapat dibatalkan.
         </p>
 
-        <form method="post" class="flex items-center gap-3">
+        <form method="post" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             {% csrf_token %}
-            <a href="{% url 'dashboard_index' %}" class="text-sm text-gray-500 border border-gray-200 px-4 py-2 rounded-md hover:bg-gray-50 transition">Batal</a>
-            <button type="submit" class="text-sm font-medium bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">Ya, Hapus</button>
+            <a href="{% url 'dashboard_index' %}" class="btn-secondary">Batal</a>
+            <button type="submit" class="btn-danger">Ya, Hapus</button>
         </form>
-    </div>
+    </section>
 </div>
 {% endblock %}

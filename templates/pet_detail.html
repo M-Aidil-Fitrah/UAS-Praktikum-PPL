@@ -1,74 +1,119 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ pet.name }} — AdoptMe{% endblock %}
+{% block title %}{{ pet.name }} - AdoptMe{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-6 py-12">
-
-    <a href="{% url 'home' %}" class="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition mb-10">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-        Kembali
+<div class="page-shell">
+    <a href="{% url 'home' %}#pets" class="icon-link" style="margin-bottom:40px;">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Kembali ke katalog
     </a>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-        <!-- Image -->
-        <div class="w-full aspect-square bg-gray-100 rounded-xl overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div style="position:sticky;top:88px;border-radius:16px;overflow:hidden;aspect-ratio:3/4;background:var(--bg-elevated);border:1px solid var(--border-faint);box-shadow:var(--shadow-card);" data-reveal>
             {% if pet.photo %}
-                <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover">
+                <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="detail-hero-img" style="width:100%;height:110%;object-fit:cover;">
             {% else %}
-                <div class="w-full h-full flex items-center justify-center text-gray-300">
-                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--border-visible);">
+                    <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                    </svg>
                 </div>
             {% endif %}
-        </div>
-
-        <!-- Info -->
-        <div>
-            <div class="flex items-center gap-2 mb-4">
-                <span class="text-xs border border-gray-200 text-gray-500 px-2.5 py-1 rounded">{{ pet.get_species_display }}</span>
+            <div style="position:absolute;bottom:0;left:0;right:0;height:42%;background:linear-gradient(to top, rgba(8,8,8,0.86) 0%, transparent 100%);pointer-events:none;"></div>
+            <div style="position:absolute;bottom:24px;left:24px;right:24px;">
                 {% if pet.status == 'Available' %}
-                    <span class="text-xs border border-green-200 text-green-600 px-2.5 py-1 rounded">Tersedia</span>
+                <span class="status-badge status-available"><span class="status-dot"></span>Tersedia</span>
                 {% elif pet.status == 'Pending' %}
-                    <span class="text-xs border border-yellow-200 text-yellow-600 px-2.5 py-1 rounded">Sedang Diproses</span>
+                <span class="status-badge status-pending"><span class="status-dot"></span>Menunggu</span>
                 {% else %}
-                    <span class="text-xs border border-gray-200 text-gray-400 px-2.5 py-1 rounded">Sudah Diadopsi</span>
+                <span class="status-badge status-adopted"><span class="status-dot"></span>Diadopsi</span>
                 {% endif %}
             </div>
+        </div>
 
-            <h1 class="text-3xl font-bold text-gray-900 tracking-tight mb-1">{{ pet.name }}</h1>
-            <p class="text-sm text-gray-400 mb-8">{{ pet.age }} bulan</p>
+        <div data-reveal>
+            <p style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">
+                {{ pet.get_species_display }} - {{ pet.age }} bulan
+            </p>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(3rem,7vw,4.8rem);letter-spacing:-0.025em;line-height:1;color:var(--text-primary);margin-bottom:24px;">
+                {{ pet.name }}
+            </h1>
+            <div class="divider-line clip-reveal" style="height:1px;background:var(--border-faint);margin-bottom:28px;"></div>
 
-            <div class="border-t border-gray-100 pt-6 mb-8">
-                <h2 class="text-sm font-medium text-gray-900 mb-3">Tentang {{ pet.name }}</h2>
-                <p class="text-sm text-gray-500 leading-relaxed">{{ pet.description|linebreaksbr }}</p>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:32px;">
+                <div style="border:1px solid var(--border-faint);border-radius:12px;padding:16px;background:var(--bg-surface);">
+                    <p class="font-mono-label" style="color:var(--text-tertiary);margin-bottom:6px;">Jenis</p>
+                    <p style="color:var(--text-primary);">{{ pet.get_species_display }}</p>
+                </div>
+                <div style="border:1px solid var(--border-faint);border-radius:12px;padding:16px;background:var(--bg-surface);">
+                    <p class="font-mono-label" style="color:var(--text-tertiary);margin-bottom:6px;">Umur</p>
+                    <p style="color:var(--text-primary);">{{ pet.age }} bulan</p>
+                </div>
             </div>
 
-            <!-- CTA -->
-            <div class="pt-6 border-t border-gray-100">
+            <section style="margin-bottom:34px;">
+                <p class="font-mono-label" style="color:var(--text-tertiary);margin-bottom:12px;">Tentang {{ pet.name }}</p>
+                <p style="font-size:15px;line-height:1.75;color:var(--text-secondary);">{{ pet.description|linebreaksbr }}</p>
+            </section>
+
+            <div style="border-top:1px solid var(--border-faint);padding-top:28px;">
                 {% if pet.status == 'Available' %}
                     {% if request.user.is_authenticated %}
                         {% if not request.user.is_staff %}
-                            <a href="{% url 'adopt_pet' pet.pk %}" class="block w-full text-center text-sm font-medium bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition">
+                            <a href="{% url 'adopt_pet' pet.pk %}" class="btn-primary" style="width:100%;">
                                 Ajukan Adopsi
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"></path></svg>
                             </a>
                         {% else %}
-                            <p class="text-sm text-gray-400 text-center py-3 border border-dashed border-gray-200 rounded-md">Admin tidak dapat mengadopsi hewan.</p>
+                            <p style="font-size:14px;color:var(--text-secondary);text-align:center;padding:16px;border:1px dashed var(--border-subtle);border-radius:12px;">Admin tidak dapat mengajukan adopsi.</p>
                         {% endif %}
                     {% else %}
-                        <div class="border border-gray-100 rounded-md p-5 text-center">
-                            <p class="text-sm text-gray-500 mb-4">Masuk terlebih dahulu untuk mengadopsi {{ pet.name }}.</p>
-                            <a href="{% url 'user_login' %}" class="inline-block text-sm font-medium bg-gray-900 text-white px-6 py-2.5 rounded-md hover:bg-gray-700 transition">Masuk Sekarang</a>
+                        <div style="border:1px solid var(--border-faint);border-radius:12px;padding:22px;background:var(--bg-surface);">
+                            <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">Masuk terlebih dahulu untuk mengadopsi {{ pet.name }}.</p>
+                            <a href="{% url 'user_login' %}" class="btn-primary">Masuk Sekarang</a>
                         </div>
                     {% endif %}
                 {% elif pet.status == 'Pending' %}
-                    <p class="text-sm text-gray-500 text-center py-3 border border-dashed border-gray-200 rounded-md">Pengajuan adopsi sedang menunggu persetujuan.</p>
+                    <p style="font-size:14px;color:var(--text-secondary);text-align:center;padding:16px;border:1px dashed var(--border-subtle);border-radius:12px;">Pengajuan adopsi sedang menunggu persetujuan.</p>
                 {% else %}
-                    <p class="text-sm text-gray-400 text-center py-3 border border-dashed border-gray-200 rounded-md">Hewan ini sudah diadopsi.</p>
+                    <p style="font-size:14px;color:var(--text-secondary);text-align:center;padding:16px;border:1px dashed var(--border-subtle);border-radius:12px;">Hewan ini sudah diadopsi.</p>
                 {% endif %}
             </div>
         </div>
-
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+        gsap.fromTo('.divider-line',
+            { scaleX: 0, transformOrigin: 'left' },
+            {
+                scaleX: 1,
+                duration: 1.2,
+                ease: 'power3.inOut',
+                scrollTrigger: { trigger: '.divider-line', start: 'top 80%' }
+            }
+        );
+
+        const heroImg = document.querySelector('.detail-hero-img');
+        if (heroImg) {
+            gsap.to(heroImg, {
+                yPercent: 12,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: heroImg.parentElement,
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
